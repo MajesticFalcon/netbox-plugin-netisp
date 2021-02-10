@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "netbox-plugin-netisp"
-version = "0.1.0.1"
+version = "0.1.0.2"
 description = "A plugin for ISPs to manage wireless and fiber operations using Netbox"
 homepage = "https://github.com/MajesticFalcon/netbox-plugin-netisp"
 repository = "https://github.com/MajesticFalcon/netbox-plugin-netisp"
-
+readme = "docs/index.md"
 authors = ["DB2 Team"]
 
 packages = [

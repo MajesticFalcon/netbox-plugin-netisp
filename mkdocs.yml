@@ -1,1 +1,6 @@
-site_name: My Docs
+site_name: NetISP Documentation
+site_url: https://netbox-plugin-netisp
+repo_url: https://github.com/MajesticFalcon/netbox-plugin-netisp
+python:
+    install:
+        - requirements: docs/requirements.txt
