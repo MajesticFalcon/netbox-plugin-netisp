@@ -27,7 +27,7 @@ NAME = os.getenv("IMAGE_NAME", "ttl255-netbox-plugin-bgppeering")
 PWD = os.getcwd()
 
 COMPOSE_FILE = "development/docker-compose.yml"
-BUILD_NAME = "netbox_bgppeering"
+BUILD_NAME = "netbox_netisp"
 
 
 # ------------------------------------------------------------------------------
