@@ -1,5 +1,6 @@
 from django.db import models
 from extras.models import ChangeLoggedModel
+from datetime import datetime
 
 class Customer(ChangeLoggedModel):
     first_name = models.CharField(max_length=30)
