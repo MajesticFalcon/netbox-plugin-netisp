@@ -8,7 +8,7 @@ class NetISP(PluginConfig):
     version = "0.1"
     author = "sutley"
     author_email = "sutley5.com"
-    base_url = "sutley"
+    base_url = ""
     required_settings = []
     default_settings = {}
 
