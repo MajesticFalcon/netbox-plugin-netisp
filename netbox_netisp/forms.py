@@ -3,6 +3,16 @@ from utilities.forms import BootstrapMixin
 
 from .models import Customer
 
+class CustomerForm(BootstrapMixin, forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        fields = (
+            'first_name',
+            'middle_name',
+            'last_name',
+        )
+
 class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
     """Form for filtering BgpPeering instances."""
 

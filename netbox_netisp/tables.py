@@ -5,6 +5,8 @@ from utilities.tables import BaseTable, ButtonsColumn, ChoiceFieldColumn, TagCol
 class CustomerTable(BaseTable):
     pk = ToggleColumn()
 
+    first_name = tables.LinkColumn()
+
     class Meta(BaseTable.Meta):
         model = Customer
         fields = ( 'pk', 'first_name', 'middle_name', 'last_name')

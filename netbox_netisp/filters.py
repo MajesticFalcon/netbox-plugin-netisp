@@ -3,7 +3,7 @@ from django.db.models import Q
 
 from .models import Customer
 
-class CustomerFilter(django_filters.FilterSet):
+class CustomerFilterSet(django_filters.FilterSet):
 
     q = django_filters.CharFilter(
         method="search",
