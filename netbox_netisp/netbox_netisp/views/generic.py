@@ -156,6 +156,38 @@ class ObjectEditView(GetReturnURLMixin,View):
             'form': form,
             'return_url': self.get_return_url(request, obj),
         })
+class ObjectView(View):
+    """
+    View a single object
+
+    Sutley disclaimer
+        Code adapted from parent project as technically this part of the core
+            and is not officially supported by the maintainers
+        To adhere completely to the plugin guidelines, I believe we would have to re-write all the helper and utils
+            Due to the scope of this project, creating a condensed wrapper of the core code feels adequate enough
+    """
+    queryset = None
+    template_name = None
+
+    def get_template_name(self):
+        """
+        Return self.template_name if set. Otherwise, resolve the template path by model app_label and name.
+        """
+        if self.template_name is not None:
+            return self.template_name
+        model_opts = self.queryset.model._meta
+        print(f'{model_opts.app_label}/{model_opts.model_name}.html')
+        return f'{model_opts.app_label}/{model_opts.model_name}.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+        Generic GET handler for accessing an object by PK or slug
+        """
+        instance = get_object_or_404(self.queryset, **kwargs)
+
+        return render(request, self.get_template_name(), {
+            'object': instance,
+        })
 
 class HomeView(View):
     template_name = 'netbox_netisp/generic/home.html'

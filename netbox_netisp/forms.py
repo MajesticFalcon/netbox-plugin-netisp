@@ -11,6 +11,7 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
             'first_name',
             'middle_name',
             'last_name',
+            'slug',
         )
 
 class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
@@ -28,6 +29,11 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
     last_name = forms.CharField(
         required=False,
         label="Last Name",
+    )
+
+    slug = forms.SlugField(
+        required=True,
+        label="Slug",
     )
 
     class Meta:

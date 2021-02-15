@@ -6,7 +6,7 @@ from django_tables2 import LazyPaginator, RequestConfig, SingleTableView
 from django.shortcuts import redirect
 from django.utils import timezone
 
-from .netbox_netisp.views.generic import ObjectListView, ObjectEditView
+from .netbox_netisp.views.generic import ObjectListView, ObjectEditView, ObjectView
 from .models import  Customer
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
@@ -23,3 +23,6 @@ class CustomerListView(ObjectListView, View):
 class CustomerEditView(ObjectEditView, View):
     queryset = Customer.objects.all()
     model_form = forms.CustomerForm
+
+class CustomerView(ObjectView):
+    queryset = Customer.objects.all()

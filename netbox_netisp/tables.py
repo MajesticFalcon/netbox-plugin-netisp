@@ -9,4 +9,4 @@ class CustomerTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Customer
-        fields = ( 'pk', 'first_name', 'middle_name', 'last_name')
+        fields = ( 'pk', 'first_name', 'middle_name', 'last_name', 'slug')
