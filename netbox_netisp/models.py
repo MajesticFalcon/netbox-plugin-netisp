@@ -4,9 +4,11 @@ from datetime import datetime
 from django.urls import reverse
 
 class Customer(ChangeLoggedModel):
-    first_name = models.CharField(max_length=30)
-    middle_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=255)
+    middle_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    phone_number = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(unique=True)
 
     def name(self):
