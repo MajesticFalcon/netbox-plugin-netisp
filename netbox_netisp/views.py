@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 
 from .netbox_netisp.views.generic import ObjectListView, ObjectEditView, ObjectView
-from .models import  Customer
+from .models import  Customer, Address
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -26,3 +26,17 @@ class CustomerEditView(ObjectEditView, View):
 
 class CustomerView(ObjectView):
     queryset = Customer.objects.all()
+
+
+
+"""Address"""
+class AddressListView(ObjectListView, View):
+    queryset = Address.objects.all()
+    table = tables.AddressTable
+
+class AddressEditView(ObjectEditView, View):
+    queryset = Address.objects.all()
+    model_form = forms.AddressForm
+
+class AddressView(ObjectView):
+    queryset = Address.objects.all()

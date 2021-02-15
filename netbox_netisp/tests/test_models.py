@@ -2,7 +2,7 @@
 
 
 from django.test import TestCase
-from netbox_netisp.models import Customer
+from netbox_netisp.models import Customer, Address
 from datetime import datetime
 
 class CustomerTestCase(TestCase):
@@ -25,3 +25,16 @@ class CustomerTestCase(TestCase):
         """Verify that the customer has a valid age"""
         sutley = Customer.objects.get(first_name="Schylar")
         self.assertGreaterEqual(sutley.age(), 1)
+
+class AddressTestCase(TestCase):
+
+    def setUp(self):
+        Address.objects.create(
+            street_number=1502,
+            street_ordinance = "S",
+            street_name = "Main",
+            street_suffix = "Ave",
+            city = "Webb City",
+            state_code = "MO",
+            zip = "64870-1234"
+        )

@@ -1,7 +1,7 @@
 from django import forms
 from utilities.forms import BootstrapMixin
 
-from .models import Customer
+from .models import Customer, Address
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
 
@@ -12,6 +12,15 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
             'middle_name',
             'last_name',
             'slug',
+        )
+class AddressForm(BootstrapMixin, forms.ModelForm):
+
+    class Meta:
+        model = Address
+        fields = (
+            'street_name',
+            'street_number',
+            'street_suffix'
         )
 
 class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
