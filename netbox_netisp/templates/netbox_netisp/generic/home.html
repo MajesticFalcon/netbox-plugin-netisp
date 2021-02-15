@@ -1,0 +1,44 @@
+
+{% extends 'base.html' %}
+{% load helpers %}
+
+{% block header %}
+    {{ block.super }}
+    <div class="container">
+        <div class="jumbotron">
+            <h1>NetISP</h1>
+            <p>Welcome to NetISP.</p>
+            <p>The goal of this plugin is to consolidate functionality from other systems into
+            Netbox. From here you will be able to manage users, accounts, services, ticketing, imaging, and more!</p>
+        </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>CRM</strong>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">
+                        <span class="badge pull-right">2</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:customer_list' %}">Customers</a></h4>
+                    <p class="list-group-item-text text-muted">Past and present point of contacts for accounts</p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">0</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:home' %}">Accounts</a></h4>
+                        <p class="list-group-item-text text-muted">Entities responsible for services</p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">1</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:address_list' %}">Addresses</a></h4>
+                        <p class="list-group-item-text text-muted">Locations created</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

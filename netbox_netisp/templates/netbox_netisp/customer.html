@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load buttons %}
+{% load helpers %}
+{% load plugins %}
+{% load static %}
+{% load tz %}
+
+{% block header %}
+    <div class="row noprint">
+        <div class="col-sm-8 col-md-9">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'dcim:site_list' %}">Sites</a></li>
+                {% if object.region %}
+                    {% for region in object.region.get_ancestors %}
+                    {% endfor %}
+                {% endif %}
+                <li>{{ object }}</li>
+            </ol>
+        </div>
+        <div class="col-sm-4 col-md-3">
+            <form action="{% url 'dcim:site_list' %}" method="get">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search sites" />
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="mdi mdi-magnify" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% include 'inc/created_updated.html' %}
+
+{% endblock %}
+
+{% block content %}
+<form>
+{% csrf_token %}
+        {% for field in form %}
+            {{ field }}
+        {% endfor %}
+</form>
+
+{% endblock %}
+
