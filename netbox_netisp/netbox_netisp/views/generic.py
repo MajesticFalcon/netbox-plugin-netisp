@@ -197,9 +197,13 @@ class ObjectView(View):
 
 class ObjectDeleteView(GetReturnURLMixin,View):
     """
-    Delete a single object.
-    queryset: The base queryset for the object being deleted
-    template_name: The name of the template
+    Delete a single object
+    
+    Sutley disclaimer
+        Code adapted from parent project as technically this part of the core
+            and is not officially supported by the maintainers
+        To adhere completely to the plugin guidelines, I believe we would have to re-write all the helper and utils
+            Due to the scope of this project, creating a condensed wrapper of the core code feels adequate enough
     """
     queryset = None
     template_name = 'generic/object_delete.html'
