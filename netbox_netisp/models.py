@@ -12,7 +12,8 @@ class Customer(ChangeLoggedModel):
     phone_number = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(unique=True)
         
-
+    def __str__(self):
+        return self.name()
     def name(self):
         return "{0} {1} {2}".format(self.first_name, self.middle_name, self.last_name)
     def age(self):

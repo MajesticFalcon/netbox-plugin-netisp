@@ -15,9 +15,9 @@
             </ol>
         </div>
         <div class="col-sm-4 col-md-3">
-            <form action="{% url 'plugins:netbox_netisp:customer_list' %}" method="get">
+            <form action="{% url 'plugins:netbox_netisp:address_list' %}" method="get">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search customers" />
+                    <input type="text" name="q" class="form-control" placeholder="Search addresses" />
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary">
                             <span class="mdi mdi-magnify" aria-hidden="true"></span>
@@ -31,6 +31,7 @@
     <div class="pull-right">
         <a class="btn btn-info btn-sm" href=" {% url 'plugins:netbox_netisp:address_list' %}">Address List</a>
         <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:address_edit' pk=object.pk %}">Edit</a>
+        <a class="btn btn-danger btn-sm" href=" {% url 'plugins:netbox_netisp:address_delete' pk=object.pk %}">Delete</a>
     </div>
 
 {% endblock %}

@@ -7,10 +7,14 @@ from django.contrib.contenttypes.models import ContentType
 from django_tables2 import RequestConfig
 from utilities.utils import csv_format, normalize_querydict, prepare_cloned_fields
 from utilities.views import GetReturnURLMixin, ObjectPermissionRequiredMixin
+from utilities.forms import ConfirmationForm
+from utilities.error_handlers import handle_protectederror
+from django.db.models import ManyToManyField, ProtectedError
 from django.utils.html import escape
 from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
 from django.contrib import messages
+
 import logging
 
 class ObjectListView(View):
@@ -189,6 +193,70 @@ class ObjectView(View):
         return render(request, self.get_template_name(), {
             'object': instance,
         })
+
+
+class ObjectDeleteView(GetReturnURLMixin,View):
+    """
+    Delete a single object.
+    queryset: The base queryset for the object being deleted
+    template_name: The name of the template
+    """
+    queryset = None
+    template_name = 'generic/object_delete.html'
+
+    def get_object(self, kwargs):
+        # Look up object by slug if one has been provided. Otherwise, use PK.
+        if 'slug' in kwargs:
+            return get_object_or_404(self.queryset, slug=kwargs['slug'])
+        else:
+            return get_object_or_404(self.queryset, pk=kwargs['pk'])
+
+    def get(self, request, **kwargs):
+        obj = self.get_object(kwargs)
+        form = ConfirmationForm(initial=request.GET)
+
+        return render(request, self.template_name, {
+            'obj': obj,
+            'form': form,
+            'obj_type': self.queryset.model._meta.verbose_name,
+            'return_url': self.get_return_url(request, obj),
+        })
+
+    def post(self, request, **kwargs):
+        logger = logging.getLogger('netbox.views.ObjectDeleteView')
+        obj = self.get_object(kwargs)
+        form = ConfirmationForm(request.POST)
+
+        if form.is_valid():
+            logger.debug("Form validation was successful")
+
+            try:
+                obj.delete()
+            except ProtectedError as e:
+                logger.info("Caught ProtectedError while attempting to delete object")
+                handle_protectederror([obj], request, e)
+                return redirect(obj.get_absolute_url())
+
+            msg = 'Deleted {} {}'.format(self.queryset.model._meta.verbose_name, obj)
+            logger.info(msg)
+            messages.success(request, msg)
+
+            return_url = form.cleaned_data.get('return_url')
+            if return_url is not None and is_safe_url(url=return_url, allowed_hosts=request.get_host()):
+                return redirect(return_url)
+            else:
+                return redirect(self.get_return_url(request, obj))
+
+        else:
+            logger.debug("Form validation failed")
+
+        return render(request, self.template_name, {
+            'obj': obj,
+            'form': form,
+            'obj_type': self.queryset.model._meta.verbose_name,
+            'return_url': self.get_return_url(request, obj),
+        })
+
 
 class HomeView(View):
     template_name = 'netbox_netisp/generic/home.html'
