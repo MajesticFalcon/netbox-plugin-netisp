@@ -2,22 +2,14 @@
 {% load buttons %}
 {% load helpers %}
 {% load static %}
+{% load plugin_extras %}
 
 {% block content %}
 <div class="pull-right noprint">
     {% block buttons %}{% endblock %}
-    {% if request.user.is_authenticated and table_config_form %}
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#ObjectTable_config" title="Configure table"><i class="mdi mdi-cog"></i> Configure</button>
-    {% endif %}
-    {% if permissions.add and 'add' in action_buttons %}
-        {% add_button content_type.model_class|validated_viewname:"add" %}
-    {% endif %}
-    {% if permissions.add and 'import' in action_buttons %}
-        {% import_button content_type.model_class|validated_viewname:"import" %}
-    {% endif %}
-    {% if 'export' in action_buttons %}
-        {% export_button content_type %}
-    {% endif %}
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#ObjectTable_config" title="Configure table"><i class="mdi mdi-cog"></i> Configure</button>
+    {% add_button content_type.model_class|plugin_viewname:"add" %}
+
 </div>
 <h1>{% block title %}{{ content_type.model_class|meta:"verbose_name_plural"|bettertitle }}{% endblock %}</h1>
 <div class="row">

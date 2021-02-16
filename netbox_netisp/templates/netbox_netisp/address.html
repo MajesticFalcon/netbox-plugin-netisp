@@ -9,9 +9,9 @@
     <div class="row noprint">
         <div class="col-sm-8 col-md-9">
             <ol class="breadcrumb">
-                <li><a href="{% url 'plugins:netbox_netisp:customer_list' %}">Customers</a></li>
+                <li><a href="{% url 'plugins:netbox_netisp:address_list' %}">Addresses</a></li>
 
-                <li>{{ object.name }}</li>
+                <li>{{ object }}</li>
             </ol>
         </div>
         <div class="col-sm-4 col-md-3">
@@ -28,37 +28,38 @@
         </div>
     </div>
 
+    <div class="pull-right">
+        <a class="btn btn-info btn-sm" href=" {% url 'plugins:netbox_netisp:address_list' %}">Address List</a>
+        <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:address_edit' pk=object.pk %}">Edit</a>
+    </div>
+
 {% endblock %}
 
-{% block content %}
-<div class="row">
-    <a class="btn btn-info btn-sm" href=" {% url 'plugins:netbox_netisp:customer_list' %}">Customer List</a>
-    <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:customer_edit' pk=object.pk %}">Edit</a>
 
-    <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <strong>Customer</strong>
-            </div>
-            <table class="table table-hover panel-body attr-table">
-                <tr>
-                    <td>Name</td>
-                    <td>{{ object.name }}</td>
-                </tr>
-                <tr>
-                    <td>Phone</td>
-                    <td>{{ object.phone }}</td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td>{{ object.email }}</td>
-                </tr>
-            </table>
-        </div>
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{object}}</h2>
+        {% include 'inc/created_updated.html' %}
     </div>
 </div>
 
-    {% include 'inc/created_updated.html' %}
+
+<div class="row">
+    <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Associated Accounts</strong>
+            </div>
+            <table class="table table-hover panel-body attr-table">
+                <tr>
+                </tr>
+            </table>
+        </div>
+</div>
+
 
 {% endblock %}
 

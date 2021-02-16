@@ -29,12 +29,22 @@ class CustomerTestCase(TestCase):
 class AddressTestCase(TestCase):
 
     def setUp(self):
-        Address.objects.create(
+        addr1 = Address.objects.create(
             street_number=1502,
-            street_ordinance = "S",
             street_name = "Main",
             street_suffix = "Ave",
             city = "Webb City",
             state_code = "MO",
-            zip = "64870-1234"
+            zip = "64870-1234",
+            slug = 'f'
         )
+
+    def test_address_name_without_ord(self):
+        address = Address.objects.get(slug='f')
+        self.assertEqual("1502 Main Ave, Webb City MO, 64870-1234", str(address))
+
+    def test_address_name_with_ord(self):
+        address = Address.objects.get(slug='f')
+        address.street_ordinance = "S"
+        self.assertEqual("1502 S. Main Ave, Webb City MO, 64870-1234", str(address))
+

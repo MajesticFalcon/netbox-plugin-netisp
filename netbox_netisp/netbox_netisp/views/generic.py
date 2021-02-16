@@ -183,6 +183,7 @@ class ObjectView(View):
         """
         Generic GET handler for accessing an object by PK or slug
         """
+
         instance = get_object_or_404(self.queryset, **kwargs)
 
         return render(request, self.get_template_name(), {

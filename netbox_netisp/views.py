@@ -14,6 +14,7 @@ from . import tables
 from . import filters
 from . import forms
 
+"""Customer"""
 class CustomerListView(ObjectListView, View):
     queryset = Customer.objects.all()
     table = tables.CustomerTable
