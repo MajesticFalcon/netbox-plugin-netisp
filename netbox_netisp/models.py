@@ -36,6 +36,21 @@ class Address(ChangeLoggedModel):
 
     def __str__(self):
         if self.street_ordinance:
-            return "{0} {1}. {2} {3}, {4} {5}, {6}".format(self.street_number, self.street_ordinance, self.street_name, self.street_suffix, self.city, self.state_code, self.zip   )
+            return "{0} {1}. {2} {3}, {4} {5}, {6}".format(self.street_number, self.street_ordinance, self.street_name, self.street_suffix, self.city, self.state_code, self.zip)
         else:
             return "{0} {1} {2}, {3} {4}, {5}".format(self.street_number, self.street_name, self.street_suffix, self.city, self.state_code, self.zip)
+
+
+class BillingPackage(ChangeLoggedModel):
+    name = models.CharField(max_length=255)
+    price = models.IntegerField()
+    download_speed = models.IntegerField()
+    upload_speed = models.IntegerField()
+    data_cap = models.IntegerField()
+    slug = models.SlugField(unique=True)
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_netisp:billingpackage_edit', args=[self.pk])
+
+    def __str__(self):
+        return "for {0}".format(self.name)

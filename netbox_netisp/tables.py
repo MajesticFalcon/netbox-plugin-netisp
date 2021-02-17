@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from .models import Customer, Address
+from .models import Customer, Address, BillingPackage
 from utilities.tables import BaseTable, ButtonsColumn, ChoiceFieldColumn, TagColumn, ToggleColumn
 
 
@@ -25,3 +25,15 @@ class AddressTable(BaseTable):
     class Meta(BaseTable.Meta):
         model = Address
         fields = ( 'pk', 'street_number', 'street_name', 'street_suffix')
+        
+class BillingPackageTable(BaseTable):
+    pk = ToggleColumn()
+
+
+    name = tables.LinkColumn()
+
+
+
+    class Meta(BaseTable.Meta):
+        model = BillingPackage
+        fields = ( 'pk', 'name', 'price', 'download_speed', 'upload_speed', 'data_cap')
