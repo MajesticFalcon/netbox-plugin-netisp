@@ -21,4 +21,9 @@ urlpatterns = [
     path("addresses/<int:pk>/", AddressView.as_view(), name="address"),
     path('addresses/<int:pk>/delete/', AddressDeleteView.as_view(), name='address_delete'),
 
+    path("billing-package/", BillingPackageListView.as_view(), name="billingpackage_list"),
+    path("billing-package/add", BillingPackageEditView.as_view(), name="billingpackage_add"),
+    path("billing-package/<int:pk>/edit/", BillingPackageEditView.as_view(), name="billingpackage_edit"),
+    path("billing-package/<int:pk>/", BillingPackageView.as_view(), name="billingpackage"),
+    path('billing-package/<int:pk>/delete/', BillingPackageDeleteView.as_view(), name='billingpackage_delete'),
 ]

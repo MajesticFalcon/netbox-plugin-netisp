@@ -1,7 +1,7 @@
 from django import forms
 from utilities.forms import BootstrapMixin, SlugField
 
-from .models import Customer, Address
+from .models import Customer, Address, BillingPackage
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
 
@@ -25,6 +25,20 @@ class AddressForm(BootstrapMixin, forms.ModelForm):
             'city',
             'state_code',
             'zip',
+            'slug'
+        )
+
+class BillingPackageForm(BootstrapMixin, forms.ModelForm):
+
+
+    class Meta:
+        model = BillingPackage
+        fields = (
+            'name',
+            'price',
+            'download_speed',
+            'upload_speed',
+            'data_cap',
             'slug'
         )
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Address
+from .models import Customer, Address, BillingPackage
 
 
 @admin.register(Customer)
@@ -13,3 +13,13 @@ class AddressAdmin(admin.ModelAdmin):
         "street_ordinance",
         "street_name")
 
+@admin.register(BillingPackage)
+class BillingPackageAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "price",
+        "download_speed",
+        "upload_speed",
+        "data_cap")
+
+    """ defining viewable fields, list display """

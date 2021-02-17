@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 
 from .netbox_netisp.views.generic import ObjectListView, ObjectEditView, ObjectView, ObjectDeleteView
-from .models import  Customer, Address
+from .models import  Customer, Address, BillingPackage
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -32,7 +32,6 @@ class CustomerDeleteView(ObjectDeleteView):
     queryset = Customer.objects.all()
 
 
-
 """Address"""
 class AddressListView(ObjectListView, View):
     queryset = Address.objects.all()
@@ -47,3 +46,19 @@ class AddressView(ObjectView):
 
 class AddressDeleteView(ObjectDeleteView):
     queryset = Address.objects.all()
+
+    
+"""BillingPackage"""
+class BillingPackageListView(ObjectListView, View):
+    queryset = BillingPackage.objects.all()
+    table = tables.BillingPackageTable
+
+class BillingPackageEditView(ObjectEditView, View):
+    queryset = BillingPackage.objects.all()
+    model_form = forms.BillingPackageForm
+
+class BillingPackageView(ObjectView):
+    queryset = BillingPackage.objects.all()
+
+class BillingPackageDeleteView(ObjectDeleteView):
+    queryset = BillingPackage.objects.all()
