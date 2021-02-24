@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('netbox_netisp', '0004_auto_20210215_1959'),
+        ("netbox_netisp", "0004_auto_20210215_1959"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customer',
-            name='birthday',
+            model_name="customer",
+            name="birthday",
             field=models.DateField(blank=True, null=True),
         ),
     ]

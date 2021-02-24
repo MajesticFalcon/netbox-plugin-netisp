@@ -6,25 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('netbox_netisp', '0009_auto_20210215_2317'),
+        ("netbox_netisp", "0009_auto_20210215_2317"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BillingPackage',
+            name="BillingPackage",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('name', models.CharField(max_length=255)),
-                ('price', models.IntegerField()),
-                ('download_speed', models.IntegerField()),
-                ('upload_speed', models.IntegerField()),
-                ('data_cap', models.IntegerField()),
-                ('slug', models.SlugField(unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                ("name", models.CharField(max_length=255)),
+                ("price", models.IntegerField()),
+                ("download_speed", models.IntegerField()),
+                ("upload_speed", models.IntegerField()),
+                ("data_cap", models.IntegerField()),
+                ("slug", models.SlugField(unique=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

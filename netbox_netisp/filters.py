@@ -3,6 +3,7 @@ from django.db.models import Q
 
 from .models import Customer
 
+
 class CustomerFilterSet(django_filters.FilterSet):
 
     q = django_filters.CharFilter(
@@ -24,8 +25,6 @@ class CustomerFilterSet(django_filters.FilterSet):
         fields = [
             "first_name",
             "last_name",
-
-
         ]
 
     def search(self, queryset, name, value):
