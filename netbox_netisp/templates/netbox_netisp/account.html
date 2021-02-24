@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load buttons %}
+{% load helpers %}
+{% load plugins %}
+{% load static %}
+{% load tz %}
+
+{% load helpers %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+
+
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Account</strong>
+            </div>
+            <table class="table table-hover panel-body attr-table">
+                <tr>
+                    <td>First Name</td>
+                    <td>{{ object.primary_applicant.name }}</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>{{ object.primary_applicant.phone }}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{ object.primary_applicant.email }}</td>
+                </tr>
+            </table>
+        </div>
+        {% if selected_service is not None %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Service Billing Detail</strong>
+                </div>
+                <table class="table table-hover panel-body attr-table table-condensed">
+                    <tr>
+                        <td>Billing completed</td>
+                        <td><label class="label label-success">{{ selected_service.billing.billing_updated }}</label></td>
+                    </tr>
+                    <tr>
+                        <td>Billing start date</td>
+                        <td>{{ selected_service.billing.billing_start_date }}</td>
+                    </tr>
+                    <tr>
+                        <td>Billing comments</td>
+                        <td>{{ selected_service.billing.comments }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Services</strong>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Service Orders </strong>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Attachments</strong>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Account</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Fiber</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Wireless</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

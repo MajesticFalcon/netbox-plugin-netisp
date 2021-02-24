@@ -1,6 +1,9 @@
 from django.contrib import admin
-from .models import Customer, Address, BillingPackage
+from .models import Customer, Address, BillingPackage, Account
 
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ("primary_applicant",)
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
@@ -16,4 +19,3 @@ class AddressAdmin(admin.ModelAdmin):
 class BillingPackageAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "download_speed", "upload_speed", "data_cap")
 
-    """ defining viewable fields, list display """

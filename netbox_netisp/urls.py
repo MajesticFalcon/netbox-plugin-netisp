@@ -45,4 +45,11 @@ urlpatterns = [
         BillingPackageDeleteView.as_view(),
         name="billingpackage_delete",
     ),
+
+    path("accounts/", AccountListView.as_view(), name="account_list"),
+    path("accounts/add", AccountEditView.as_view(), name="account_add"),
+    path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
+    path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
+    path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
+
 ]

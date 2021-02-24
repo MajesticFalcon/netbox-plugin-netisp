@@ -1,7 +1,7 @@
 from django import forms
 from utilities.forms import BootstrapMixin, SlugField
 
-from .models import Customer, Address, BillingPackage
+from .models import Customer, Address, BillingPackage, Account
 
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
@@ -58,3 +58,11 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Customer
         fields = []
+
+class AccountForm(BootstrapMixin, forms.ModelForm):
+
+    class Meta:
+        model = Account
+        fields = (
+            'primary_applicant',
+        )
