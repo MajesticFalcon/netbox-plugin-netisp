@@ -117,7 +117,12 @@ ENFORCE_GLOBAL_UNIQUE = False
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {"rq_console": {"format": "%(asctime)s %(message)s", "datefmt": "%H:%M:%S",},},
+    "formatters": {
+        "rq_console": {
+            "format": "%(asctime)s %(message)s",
+            "datefmt": "%H:%M:%S",
+        },
+    },
     "handlers": {
         "rq_console": {
             "level": "DEBUG",
@@ -126,7 +131,9 @@ LOGGING = {
             "exclude": ["%(asctime)s"],
         },
     },
-    "loggers": {"rq.worker": {"handlers": ["rq_console"], "level": "DEBUG"},},
+    "loggers": {
+        "rq.worker": {"handlers": ["rq_console"], "level": "DEBUG"},
+    },
 }
 
 # Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users

@@ -6,33 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('netbox_netisp', '0003_address'),
+        ("netbox_netisp", "0003_address"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customer',
-            name='email',
+            model_name="customer",
+            name="email",
             field=models.EmailField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='customer',
-            name='phone_number',
+            model_name="customer",
+            name="phone_number",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='first_name',
+            model_name="customer",
+            name="first_name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='last_name',
+            model_name="customer",
+            name="last_name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='middle_name',
+            model_name="customer",
+            name="middle_name",
             field=models.CharField(max_length=255),
         ),
     ]
