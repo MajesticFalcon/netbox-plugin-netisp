@@ -82,33 +82,45 @@ class BillingPackageView(ObjectView):
 class BillingPackageDeleteView(ObjectDeleteView):
     queryset = BillingPackage.objects.all()
 
+
 """Account"""
+
+
 class AccountListView(ObjectListView, View):
     queryset = Account.objects.all()
     table = tables.AccountTable
+
 
 class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
 
+
 class AccountView(ObjectView):
     queryset = Account.objects.all()
+
 
 class AccountDeleteView(ObjectDeleteView):
     queryset = Account.objects.all()
     selected_service = {}
 
+
 """Equipment"""
+
+
 class EquipmentListView(ObjectListView, View):
     queryset = Equipment.objects.all()
     table = tables.EquipmentTable
+
 
 class EquipmentEditView(ObjectEditView, View):
     queryset = Equipment.objects.all()
     model_form = forms.EquipmentForm
 
+
 class EquipmentView(ObjectView):
     queryset = Equipment.objects.all()
+
 
 class EquipmentDeleteView(ObjectDeleteView):
     queryset = Equipment.objects.all()

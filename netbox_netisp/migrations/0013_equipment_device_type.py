@@ -7,15 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dcim', '0122_standardize_name_length'),
-        ('netbox_netisp', '0012_equipment'),
+        ("dcim", "0122_standardize_name_length"),
+        ("netbox_netisp", "0012_equipment"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='equipment',
-            name='device_type',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.PROTECT, to='dcim.devicetype'),
+            model_name="equipment",
+            name="device_type",
+            field=models.ForeignKey(
+                default="",
+                on_delete=django.db.models.deletion.PROTECT,
+                to="dcim.devicetype",
+            ),
             preserve_default=False,
         ),
     ]

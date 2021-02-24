@@ -45,17 +45,22 @@ urlpatterns = [
         BillingPackageDeleteView.as_view(),
         name="billingpackage_delete",
     ),
-
     path("accounts/", AccountListView.as_view(), name="account_list"),
     path("accounts/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
-    path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
-
+    path(
+        "accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"
+    ),
     path("equipment/", EquipmentListView.as_view(), name="equipment_list"),
     path("equipment/add", EquipmentEditView.as_view(), name="equipment_add"),
-    path("equipment/<int:pk>/edit/", EquipmentEditView.as_view(), name="equipment_edit"),
+    path(
+        "equipment/<int:pk>/edit/", EquipmentEditView.as_view(), name="equipment_edit"
+    ),
     path("equipment/<int:pk>/", EquipmentView.as_view(), name="equipment"),
-    path("equipment/<int:pk>/delete/", EquipmentDeleteView.as_view(), name="equipment_delete"),
-
+    path(
+        "equipment/<int:pk>/delete/",
+        EquipmentDeleteView.as_view(),
+        name="equipment_delete",
+    ),
 ]

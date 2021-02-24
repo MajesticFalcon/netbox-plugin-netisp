@@ -7,22 +7,33 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dcim', '0122_standardize_name_length'),
-        ('netbox_netisp', '0011_account'),
+        ("dcim", "0122_standardize_name_length"),
+        ("netbox_netisp", "0011_account"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Equipment',
+            name="Equipment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('serial', models.CharField(max_length=255)),
-                ('manufacturer', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dcim.manufacturer')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                ("serial", models.CharField(max_length=255)),
+                (
+                    "manufacturer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="dcim.manufacturer",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

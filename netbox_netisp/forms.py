@@ -59,17 +59,14 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
         model = Customer
         fields = []
 
-class AccountForm(BootstrapMixin, forms.ModelForm):
 
+class AccountForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Account
-        fields = (
-            'primary_applicant',
-        )
-class EquipmentForm(BootstrapMixin, forms.ModelForm):
+        fields = ("primary_applicant",)
 
+
+class EquipmentForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Equipment
-        fields = (
-            'serial', 'manufacturer', 'device_type'
-        )
+        fields = ("serial", "manufacturer", "device_type")

@@ -11,7 +11,6 @@ from utilities.tables import (
 )
 
 
-
 class CustomerTable(BaseTable):
     pk = ToggleColumn()
 
@@ -39,7 +38,8 @@ class BillingPackageTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = BillingPackage
-        fields = ( 'pk', 'name', 'price', 'download_speed', 'upload_speed', 'data_cap')
+        fields = ("pk", "name", "price", "download_speed", "upload_speed", "data_cap")
+
 
 class AccountTable(BaseTable):
 
@@ -47,7 +47,8 @@ class AccountTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Account
-        fields = ( 'pk', 'primary_applicant.name')
+        fields = ("pk", "primary_applicant.name")
+
 
 class EquipmentTable(BaseTable):
 
@@ -55,4 +56,4 @@ class EquipmentTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Account
-        fields = ( 'pk', 'serial', 'manufacturer', 'device_type')
+        fields = ("pk", "serial", "manufacturer", "device_type")
