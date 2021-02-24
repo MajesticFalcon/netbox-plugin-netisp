@@ -2,7 +2,7 @@ from django.db import models
 from extras.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
-
+from dcim.models import Manufacturer, DeviceType
 
 class Customer(ChangeLoggedModel):
     first_name = models.CharField(max_length=255)
@@ -81,3 +81,11 @@ class Account(ChangeLoggedModel):
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_netisp:account', args=[self.pk])
+
+class Equipment(ChangeLoggedModel):
+    serial = models.CharField(max_length=255)
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
+    device_type = models.ForeignKey(DeviceType, on_delete=models.PROTECT)
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_netisp:equipment', args=[self.pk])

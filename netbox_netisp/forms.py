@@ -1,7 +1,7 @@
 from django import forms
 from utilities.forms import BootstrapMixin, SlugField
 
-from .models import Customer, Address, BillingPackage, Account
+from .models import Customer, Address, BillingPackage, Account, Equipment
 
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
@@ -65,4 +65,11 @@ class AccountForm(BootstrapMixin, forms.ModelForm):
         model = Account
         fields = (
             'primary_applicant',
+        )
+class EquipmentForm(BootstrapMixin, forms.ModelForm):
+
+    class Meta:
+        model = Equipment
+        fields = (
+            'serial', 'manufacturer', 'device_type'
         )

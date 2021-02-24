@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Address, BillingPackage, Account
+from .models import Customer, Address, BillingPackage, Account, Equipment
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
@@ -18,4 +18,9 @@ class AddressAdmin(admin.ModelAdmin):
 @admin.register(BillingPackage)
 class BillingPackageAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "download_speed", "upload_speed", "data_cap")
+
+@admin.register(Equipment)
+class EquipmentAdmin(admin.ModelAdmin):
+    list_display = ("serial", "manufacturer", "device_type")
+
 

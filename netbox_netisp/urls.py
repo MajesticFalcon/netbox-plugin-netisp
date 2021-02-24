@@ -52,4 +52,10 @@ urlpatterns = [
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
 
+    path("equipment/", EquipmentListView.as_view(), name="equipment_list"),
+    path("equipment/add", EquipmentEditView.as_view(), name="equipment_add"),
+    path("equipment/<int:pk>/edit/", EquipmentEditView.as_view(), name="equipment_edit"),
+    path("equipment/<int:pk>/", EquipmentView.as_view(), name="equipment"),
+    path("equipment/<int:pk>/delete/", EquipmentDeleteView.as_view(), name="equipment_delete"),
+
 ]
