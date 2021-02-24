@@ -7,4 +7,3 @@ menu_items = (
         link_text="Home",
     ),
 )
- 

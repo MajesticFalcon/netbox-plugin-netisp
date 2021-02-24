@@ -17,6 +17,7 @@ from django.contrib import messages
 
 import logging
 
+
 class ObjectListView(View):
     """
     List a series of objects.
@@ -27,12 +28,13 @@ class ObjectListView(View):
         To adhere completely to the plugin guidelines, I believe we would have to re-write all the helper and utils
             Due to the scope of this project, creating a condensed wrapper of the core code feels adequate enough
     """
+
     queryset = None
     filterset = None
     filterset_form = None
     table = None
-    template_name = 'netbox_netisp/generic/object_list.html'
-    action_buttons = ('add', 'import', 'export')
+    template_name = "netbox_netisp/generic/object_list.html"
+    action_buttons = ("add", "import", "export")
 
     def get(self, request):
 
@@ -43,21 +45,22 @@ class ObjectListView(View):
             self.queryset = self.filterset(request.GET, self.queryset).qs
 
         table = self.table(self.queryset, user=request.user)
-        paginate = {
-            'per_page': 5
-        }
+        paginate = {"per_page": 5}
         RequestConfig(request, paginate).configure(table)
 
         context = {
-            'content_type': content_type,
-            'action_buttons': self.action_buttons,
-            'table': table,
-            'filter_form': self.filterset_form(request.GET, label_suffix='') if self.filterset_form else None,
+            "content_type": content_type,
+            "action_buttons": self.action_buttons,
+            "table": table,
+            "filter_form": self.filterset_form(request.GET, label_suffix="")
+            if self.filterset_form
+            else None,
         }
 
         return render(request, self.template_name, context)
 
-class ObjectEditView(GetReturnURLMixin,View):
+
+class ObjectEditView(GetReturnURLMixin, View):
     """
     Create or edit a single object
 
@@ -67,20 +70,19 @@ class ObjectEditView(GetReturnURLMixin,View):
         To adhere completely to the plugin guidelines, I believe we would have to re-write all the helper and utils
             Due to the scope of this project, creating a condensed wrapper of the core code feels adequate enough
     """
+
     queryset = None
     model_form = None
-    template_name = 'netbox_netisp/generic/object_edit.html'
-
+    template_name = "netbox_netisp/generic/object_edit.html"
 
     def get_object(self, kwargs):
         # Look up an existing object by slug or PK, if provided.
-        if 'slug' in kwargs:
-            return get_object_or_404(self.queryset, slug=kwargs['slug'])
-        elif 'pk' in kwargs:
-            return get_object_or_404(self.queryset, pk=kwargs['pk'])
+        if "slug" in kwargs:
+            return get_object_or_404(self.queryset, slug=kwargs["slug"])
+        elif "pk" in kwargs:
+            return get_object_or_404(self.queryset, pk=kwargs["pk"])
         # Otherwise, return a new instance.
         return self.queryset.model()
-
 
     def alter_obj(self, obj, request, url_args, url_kwargs):
         # Allow views to add extra info to an object before it is processed. For example, a parent object can be defined
@@ -93,21 +95,21 @@ class ObjectEditView(GetReturnURLMixin,View):
         initial_data = normalize_querydict(request.GET)
         form = self.model_form(instance=obj, initial=initial_data)
 
-        return render(request, self.template_name, {
-            'obj': obj,
-            'obj_type': self.queryset.model._meta.verbose_name,
-            'form': form,
-            'return_url': self.get_return_url(request, obj),
-        })
+        return render(
+            request,
+            self.template_name,
+            {
+                "obj": obj,
+                "obj_type": self.queryset.model._meta.verbose_name,
+                "form": form,
+                "return_url": self.get_return_url(request, obj),
+            },
+        )
 
     def post(self, request, *args, **kwargs):
-        logger = logging.getLogger('netbox.views.ObjectEditView')
+        logger = logging.getLogger("netbox.views.ObjectEditView")
         obj = self.alter_obj(self.get_object(kwargs), request, args, kwargs)
-        form = self.model_form(
-            data=request.POST,
-            files=request.FILES,
-            instance=obj
-        )
+        form = self.model_form(data=request.POST, files=request.FILES, instance=obj)
 
         if form.is_valid():
             logger.debug("Form validation was successful")
@@ -120,28 +122,32 @@ class ObjectEditView(GetReturnURLMixin,View):
                     # Check that the new object conforms with any assigned object-level permissions
                     self.queryset.get(pk=obj.pk)
 
-                msg = '{} {}'.format(
-                    'Created' if object_created else 'Modified',
-                    self.queryset.model._meta.verbose_name
+                msg = "{} {}".format(
+                    "Created" if object_created else "Modified",
+                    self.queryset.model._meta.verbose_name,
                 )
                 logger.info(f"{msg} {obj} (PK: {obj.pk})")
-                if hasattr(obj, 'get_absolute_url'):
-                    msg = '{} <a href="{}">{}</a>'.format(msg, obj.get_absolute_url(), escape(obj))
+                if hasattr(obj, "get_absolute_url"):
+                    msg = '{} <a href="{}">{}</a>'.format(
+                        msg, obj.get_absolute_url(), escape(obj)
+                    )
                 else:
-                    msg = '{} {}'.format(msg, escape(obj))
+                    msg = "{} {}".format(msg, escape(obj))
                 messages.success(request, mark_safe(msg))
 
-                if '_addanother' in request.POST:
+                if "_addanother" in request.POST:
 
                     # If the object has clone_fields, pre-populate a new instance of the form
-                    if hasattr(obj, 'clone_fields'):
-                        url = '{}?{}'.format(request.path, prepare_cloned_fields(obj))
+                    if hasattr(obj, "clone_fields"):
+                        url = "{}?{}".format(request.path, prepare_cloned_fields(obj))
                         return redirect(url)
 
                     return redirect(request.get_full_path())
 
-                return_url = form.cleaned_data.get('return_url')
-                if return_url is not None and is_safe_url(url=return_url, allowed_hosts=request.get_host()):
+                return_url = form.cleaned_data.get("return_url")
+                if return_url is not None and is_safe_url(
+                    url=return_url, allowed_hosts=request.get_host()
+                ):
                     return redirect(return_url)
                 else:
                     return redirect(self.get_return_url(request, obj))
@@ -154,12 +160,18 @@ class ObjectEditView(GetReturnURLMixin,View):
         else:
             logger.debug("Form validation failed")
 
-        return render(request, self.template_name, {
-            'obj': obj,
-            'obj_type': self.queryset.model._meta.verbose_name,
-            'form': form,
-            'return_url': self.get_return_url(request, obj),
-        })
+        return render(
+            request,
+            self.template_name,
+            {
+                "obj": obj,
+                "obj_type": self.queryset.model._meta.verbose_name,
+                "form": form,
+                "return_url": self.get_return_url(request, obj),
+            },
+        )
+
+
 class ObjectView(View):
     """
     View a single object
@@ -170,6 +182,7 @@ class ObjectView(View):
         To adhere completely to the plugin guidelines, I believe we would have to re-write all the helper and utils
             Due to the scope of this project, creating a condensed wrapper of the core code feels adequate enough
     """
+
     queryset = None
     template_name = None
 
@@ -180,8 +193,8 @@ class ObjectView(View):
         if self.template_name is not None:
             return self.template_name
         model_opts = self.queryset.model._meta
-        print(f'{model_opts.app_label}/{model_opts.model_name}.html')
-        return f'{model_opts.app_label}/{model_opts.model_name}.html'
+        print(f"{model_opts.app_label}/{model_opts.model_name}.html")
+        return f"{model_opts.app_label}/{model_opts.model_name}.html"
 
     def get(self, request, *args, **kwargs):
         """
@@ -190,44 +203,53 @@ class ObjectView(View):
 
         instance = get_object_or_404(self.queryset, **kwargs)
 
-        return render(request, self.get_template_name(), {
-            'object': instance,
-        })
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": instance,
+            },
+        )
 
 
-class ObjectDeleteView(GetReturnURLMixin,View):
+class ObjectDeleteView(GetReturnURLMixin, View):
     """
     Delete a single object
-    
+
     Sutley disclaimer
         Code adapted from parent project as technically this part of the core
             and is not officially supported by the maintainers
         To adhere completely to the plugin guidelines, I believe we would have to re-write all the helper and utils
             Due to the scope of this project, creating a condensed wrapper of the core code feels adequate enough
     """
+
     queryset = None
-    template_name = 'generic/object_delete.html'
+    template_name = "generic/object_delete.html"
 
     def get_object(self, kwargs):
         # Look up object by slug if one has been provided. Otherwise, use PK.
-        if 'slug' in kwargs:
-            return get_object_or_404(self.queryset, slug=kwargs['slug'])
+        if "slug" in kwargs:
+            return get_object_or_404(self.queryset, slug=kwargs["slug"])
         else:
-            return get_object_or_404(self.queryset, pk=kwargs['pk'])
+            return get_object_or_404(self.queryset, pk=kwargs["pk"])
 
     def get(self, request, **kwargs):
         obj = self.get_object(kwargs)
         form = ConfirmationForm(initial=request.GET)
 
-        return render(request, self.template_name, {
-            'obj': obj,
-            'form': form,
-            'obj_type': self.queryset.model._meta.verbose_name,
-            'return_url': self.get_return_url(request, obj),
-        })
+        return render(
+            request,
+            self.template_name,
+            {
+                "obj": obj,
+                "form": form,
+                "obj_type": self.queryset.model._meta.verbose_name,
+                "return_url": self.get_return_url(request, obj),
+            },
+        )
 
     def post(self, request, **kwargs):
-        logger = logging.getLogger('netbox.views.ObjectDeleteView')
+        logger = logging.getLogger("netbox.views.ObjectDeleteView")
         obj = self.get_object(kwargs)
         form = ConfirmationForm(request.POST)
 
@@ -241,12 +263,14 @@ class ObjectDeleteView(GetReturnURLMixin,View):
                 handle_protectederror([obj], request, e)
                 return redirect(obj.get_absolute_url())
 
-            msg = 'Deleted {} {}'.format(self.queryset.model._meta.verbose_name, obj)
+            msg = "Deleted {} {}".format(self.queryset.model._meta.verbose_name, obj)
             logger.info(msg)
             messages.success(request, msg)
 
-            return_url = form.cleaned_data.get('return_url')
-            if return_url is not None and is_safe_url(url=return_url, allowed_hosts=request.get_host()):
+            return_url = form.cleaned_data.get("return_url")
+            if return_url is not None and is_safe_url(
+                url=return_url, allowed_hosts=request.get_host()
+            ):
                 return redirect(return_url)
             else:
                 return redirect(self.get_return_url(request, obj))
@@ -254,15 +278,20 @@ class ObjectDeleteView(GetReturnURLMixin,View):
         else:
             logger.debug("Form validation failed")
 
-        return render(request, self.template_name, {
-            'obj': obj,
-            'form': form,
-            'obj_type': self.queryset.model._meta.verbose_name,
-            'return_url': self.get_return_url(request, obj),
-        })
+        return render(
+            request,
+            self.template_name,
+            {
+                "obj": obj,
+                "form": form,
+                "obj_type": self.queryset.model._meta.verbose_name,
+                "return_url": self.get_return_url(request, obj),
+            },
+        )
 
 
 class HomeView(View):
-    template_name = 'netbox_netisp/generic/home.html'
+    template_name = "netbox_netisp/generic/home.html"
+
     def get(self, request):
         return render(request, self.template_name)
