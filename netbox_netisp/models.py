@@ -2,6 +2,7 @@ from django.db import models
 from extras.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
+from dcim.models import Manufacturer, DeviceType
 
 
 class Customer(ChangeLoggedModel):
@@ -70,14 +71,23 @@ class BillingPackage(ChangeLoggedModel):
     slug = models.SlugField(unique=True)
 
     def get_absolute_url(self):
-        return reverse('plugins:netbox_netisp:billingpackage', args=[self.pk])
-
+        return reverse("plugins:netbox_netisp:billingpackage", args=[self.pk])
 
     def __str__(self):
         return "for {0}".format(self.name)
+
 
 class Account(ChangeLoggedModel):
     primary_applicant = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def get_absolute_url(self):
-        return reverse('plugins:netbox_netisp:account', args=[self.pk])
+        return reverse("plugins:netbox_netisp:account", args=[self.pk])
+
+
+class Equipment(ChangeLoggedModel):
+    serial = models.CharField(max_length=255)
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
+    device_type = models.ForeignKey(DeviceType, on_delete=models.PROTECT)
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:equipment", args=[self.pk])

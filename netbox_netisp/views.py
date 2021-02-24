@@ -4,18 +4,14 @@ from django_tables2 import LazyPaginator, RequestConfig, SingleTableView
 from django.shortcuts import redirect
 from django.utils import timezone
 
-<<<<<<< HEAD
-from .netbox_netisp.views.generic import ObjectListView, ObjectEditView, ObjectView, ObjectDeleteView
-from .models import  Customer, Address, BillingPackage, Account
-=======
+
 from .netbox_netisp.views.generic import (
     ObjectListView,
     ObjectEditView,
     ObjectView,
     ObjectDeleteView,
 )
-from .models import Customer, Address, BillingPackage
->>>>>>> 57a258a04d3a9e6bc70540c8bd7b05e4f9a65707
+from .models import Customer, Address, BillingPackage, Account, Equipment
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -86,18 +82,46 @@ class BillingPackageView(ObjectView):
 class BillingPackageDeleteView(ObjectDeleteView):
     queryset = BillingPackage.objects.all()
 
+
 """Account"""
+
+
 class AccountListView(ObjectListView, View):
     queryset = Account.objects.all()
     table = tables.AccountTable
+
 
 class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
 
+
 class AccountView(ObjectView):
     queryset = Account.objects.all()
 
+
 class AccountDeleteView(ObjectDeleteView):
     queryset = Account.objects.all()
+    selected_service = {}
+
+
+"""Equipment"""
+
+
+class EquipmentListView(ObjectListView, View):
+    queryset = Equipment.objects.all()
+    table = tables.EquipmentTable
+
+
+class EquipmentEditView(ObjectEditView, View):
+    queryset = Equipment.objects.all()
+    model_form = forms.EquipmentForm
+
+
+class EquipmentView(ObjectView):
+    queryset = Equipment.objects.all()
+
+
+class EquipmentDeleteView(ObjectDeleteView):
+    queryset = Equipment.objects.all()
     selected_service = {}

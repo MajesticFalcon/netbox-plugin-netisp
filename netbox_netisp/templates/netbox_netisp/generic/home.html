@@ -16,7 +16,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-6 col-md-4">
+    <div class="col-sm-4 col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong>CRM</strong>
@@ -43,6 +43,21 @@
                         <p class="list-group-item-text text-muted">Billing packages</p>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Equipment</strong>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">
+                        <span class="badge pull-right">1000</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:equipment_list' %}">Customer Premise Equipment</a></h4>
+                        <p class="list-group-item-text text-muted">Devices that terminate services for customers</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
