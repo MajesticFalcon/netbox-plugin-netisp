@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from .models import Customer, Address, BillingPackage
+from .models import Customer, Address, BillingPackage, Account
 from utilities.tables import BaseTable, ButtonsColumn, ChoiceFieldColumn, TagColumn, ToggleColumn
 
 
@@ -37,3 +37,11 @@ class BillingPackageTable(BaseTable):
     class Meta(BaseTable.Meta):
         model = BillingPackage
         fields = ( 'pk', 'name', 'price', 'download_speed', 'upload_speed', 'data_cap')
+
+class AccountTable(BaseTable):
+
+    pk = tables.LinkColumn()
+
+    class Meta(BaseTable.Meta):
+        model = Account
+        fields = ( 'pk', 'primary_applicant.name')

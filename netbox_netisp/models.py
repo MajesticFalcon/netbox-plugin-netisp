@@ -50,7 +50,13 @@ class BillingPackage(ChangeLoggedModel):
     slug = models.SlugField(unique=True)
 
     def get_absolute_url(self):
-        return reverse('plugins:netbox_netisp:billingpackage_edit', args=[self.pk])
+        return reverse('plugins:netbox_netisp:billingpackage', args=[self.pk])
 
     def __str__(self):
         return "for {0}".format(self.name)
+
+class Account(ChangeLoggedModel):
+    primary_applicant = models.ForeignKey(Customer, on_delete=models.PROTECT)
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_netisp:account', args=[self.pk])
