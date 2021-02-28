@@ -144,8 +144,9 @@ class ObjectEditView(GetReturnURLMixin, View):
                     return redirect(request.get_full_path())
 
                 return_url = form.cleaned_data.get("return_url")
-                #needs safe url checking
-                if return_url is not None:
+                if return_url is not None and is_safe_url(
+                    url=return_url, allowed_hosts=request.get_host()
+                ):
                     return redirect(return_url)
                 else:
                     return redirect(self.get_return_url(request, obj))
