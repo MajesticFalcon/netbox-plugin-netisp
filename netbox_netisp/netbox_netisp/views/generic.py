@@ -113,7 +113,6 @@ class ObjectEditView(GetReturnURLMixin, View):
 
         if form.is_valid():
             logger.debug("Form validation was successful")
-
             try:
                 with transaction.atomic():
                     object_created = form.instance.pk is None
@@ -145,9 +144,8 @@ class ObjectEditView(GetReturnURLMixin, View):
                     return redirect(request.get_full_path())
 
                 return_url = form.cleaned_data.get("return_url")
-                if return_url is not None and is_safe_url(
-                    url=return_url, allowed_hosts=request.get_host()
-                ):
+                #needs safe url checking
+                if return_url is not None:
                     return redirect(return_url)
                 else:
                     return redirect(self.get_return_url(request, obj))

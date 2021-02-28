@@ -1,5 +1,16 @@
 from django.contrib import admin
-from .models import Customer, Address, BillingPackage, Account, Equipment
+from .models import (
+    Customer,
+    Address,
+    BillingPackage,
+    Account,
+    Equipment,
+    CustomerPremiseEquipment,
+    RadioAccessPoint,
+    AntennaProfile,
+    )
+
+
 
 
 @admin.register(Account)
@@ -22,6 +33,14 @@ class BillingPackageAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "download_speed", "upload_speed", "data_cap")
 
 
-@admin.register(Equipment)
-class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ("serial", "manufacturer", "device_type")
+@admin.register(CustomerPremiseEquipment)
+class CustomerPremiseEquipmentAdmin(admin.ModelAdmin):
+    list_display = ("ip_address",)
+
+@admin.register(RadioAccessPoint)
+class RadioAccessPointAdmin(admin.ModelAdmin):
+    list_display = ("name","frequency","antenna")
+
+@admin.register(AntennaProfile)
+class AntennaProfileAdmin(admin.ModelAdmin):
+    list_display = ("azimuth","beamwidth",)

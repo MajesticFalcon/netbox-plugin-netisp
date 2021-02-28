@@ -3,7 +3,7 @@ from extras.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
 from dcim.models import Manufacturer, DeviceType
-
+from ipam.fields import IPAddressField
 
 class Customer(ChangeLoggedModel):
     first_name = models.CharField(max_length=255)
@@ -91,3 +91,28 @@ class Equipment(ChangeLoggedModel):
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:equipment", args=[self.pk])
+
+class CustomerPremiseEquipment(Equipment):
+    ip_address = IPAddressField(
+    )
+
+class AntennaProfile(Equipment):
+    azimuth = models.CharField(max_length=30)
+    beamwidth = models.IntegerField()
+    name = models.CharField(max_length=30)
+
+class RadioAccessPoint(Equipment):
+    ANTENNA_FREQUENCY_CHOICES = (
+        ("900mhz", "900"),
+        ("2.4ghz", "2.4"),
+        ("3.5ghz", "3.5"),
+        ("5ghz", "5"),
+    )
+
+    frequency = models.CharField(max_length=30, choices=ANTENNA_FREQUENCY_CHOICES)
+    name = models.CharField(max_length=30)
+    antenna = models.ForeignKey(AntennaProfile, on_delete=models.PROTECT)
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:radioaccesspoint", args=[self.pk])
+

@@ -63,4 +63,10 @@ urlpatterns = [
         EquipmentDeleteView.as_view(),
         name="equipment_delete",
     ),
+
+    path("sector/", RadioAccessPointListView.as_view(), name="radioaccesspoint_list"),
+    path("sector/add", RadioAccessPointEditView.as_view(), name="radioaccesspoint_add"),
+    path("sector/<int:pk>/edit", RadioAccessPointEditView.as_view(), name="radioaccesspoint_edit"),
+    path("sector/<int:pk>/", RadioAccessPointView.as_view(), name="radioaccesspoint"),
+
 ]
