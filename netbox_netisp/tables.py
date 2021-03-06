@@ -3,7 +3,7 @@ import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
 
-from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint
+from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, AntennaProfile
 from utilities.tables import (
     BaseTable,
     ButtonsColumn,
@@ -60,7 +60,7 @@ class EquipmentTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Equipment
-        fields = ("pk", "serial", "manufacturer", "device_type", )
+        fields = ("serial", "manufacturer", "device_type", )
 
 class RadioAccessPointTable(EquipmentTable):
 
@@ -70,3 +70,10 @@ class RadioAccessPointTable(EquipmentTable):
     class Meta(BaseTable.Meta):
         model = RadioAccessPoint
         fields = ("antenna",)
+
+class AntennaProfileTable(EquipmentTable):
+    name = tables.LinkColumn('plugins:netbox_netisp:antennaprofile', args=[A("pk")])
+
+    class Meta(BaseTable.Meta):
+        model = AntennaProfile
+        fields = ("name",)

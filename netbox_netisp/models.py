@@ -101,6 +101,9 @@ class AntennaProfile(Equipment):
     beamwidth = models.IntegerField()
     name = models.CharField(max_length=30)
 
+    def __str__(self):
+        return "Profile: {0}".format(self.name)
+
 class RadioAccessPoint(Equipment):
     ANTENNA_FREQUENCY_CHOICES = (
         ("900mhz", "900"),

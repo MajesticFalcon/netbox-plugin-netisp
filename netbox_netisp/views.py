@@ -137,7 +137,18 @@ class RadioAccessPointEditView(ObjectEditView, View):
     queryset = RadioAccessPoint.objects.all()
     model_form = forms.RadioAccessPointForm
 
-
 class RadioAccessPointView(ObjectView):
     queryset = RadioAccessPoint.objects.all()
+
+"""Antenna Profile"""
+class AntennaProfileListView(ObjectListView, View):
+    queryset = AntennaProfile.objects.all()
+    table = tables.AntennaProfileTable
+
+class AntennaProfileEditView(ObjectEditView, View):
+    queryset = AntennaProfile.objects.all()
+    model_form = forms.AntennaProfileForm
+
+class AntennaProfileView(ObjectView):
+    queryset = AntennaProfile.objects.all()
 
