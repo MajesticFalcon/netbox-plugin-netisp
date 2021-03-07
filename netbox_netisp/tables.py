@@ -3,14 +3,24 @@ import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
 
-from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, AntennaProfile, CustomerPremiseEquipment
+from .models import (
+    Customer,
+    Address,
+    BillingPackage,
+    Account,
+    Equipment,
+    RadioAccessPoint,
+    AntennaProfile,
+    CustomerPremiseEquipment,
+    Service
+)
+
 from utilities.tables import (
     BaseTable,
     ButtonsColumn,
     ChoiceFieldColumn,
     TagColumn,
-    ToggleColumn,
-
+    ToggleColumn
 )
 
 
@@ -85,3 +95,14 @@ class CustomerPremiseEquipmentTable(EquipmentTable):
     class Meta(BaseTable.Meta):
         model = CustomerPremiseEquipment
         fields = ("ip_address",)
+
+class ServiceTable(BaseTable):
+    pk = ToggleColumn()
+
+    def render_billing_package__download_speed(self, value):
+        return("{}mbps".format(value))
+
+    class Meta(BaseTable.Meta):
+        model = Service
+        fields = ("pk", "billing_package", "address", "billing_package.price", "billing_package.download_speed")
+

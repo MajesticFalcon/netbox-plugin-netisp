@@ -8,6 +8,8 @@ from .models import (
     CustomerPremiseEquipment,
     RadioAccessPoint,
     AntennaProfile,
+    WirelessService,
+    FiberService
     )
 
 
@@ -44,3 +46,12 @@ class RadioAccessPointAdmin(admin.ModelAdmin):
 @admin.register(AntennaProfile)
 class AntennaProfileAdmin(admin.ModelAdmin):
     list_display = ("azimuth","beamwidth",)
+
+@admin.register(WirelessService)
+class AntennaProfileAdmin(admin.ModelAdmin):
+    list_display = ("type","account", "address", "billing_package", "cpe", "sector",)
+
+@admin.register(FiberService)
+class AntennaProfileAdmin(admin.ModelAdmin):
+    list_display = ("type","account", "address", "billing_package", "cpe", "interface",)
+

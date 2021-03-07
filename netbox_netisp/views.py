@@ -13,7 +13,7 @@ from .netbox_netisp.views.generic import (
     ObjectDeleteView,
 )
 from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment,\
-    AntennaProfile
+    AntennaProfile, Service
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -100,6 +100,23 @@ class AccountEditView(ObjectEditView, View):
 
 class AccountView(ObjectView):
     queryset = Account.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        instance = get_object_or_404(self.queryset, **kwargs)
+        current_account = instance
+        services = current_account.service_set.all()
+        service_table = tables.ServiceTable(services)
+        RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": self.instance,
+                "service_table": service_table,
+                "service_count": len(services),
+
+            },
+        )
 
 
 class AccountDeleteView(ObjectDeleteView):
