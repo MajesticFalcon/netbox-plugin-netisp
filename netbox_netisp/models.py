@@ -93,8 +93,7 @@ class Equipment(ChangeLoggedModel):
         return reverse("plugins:netbox_netisp:equipment", args=[self.pk])
 
 class CustomerPremiseEquipment(Equipment):
-    ip_address = IPAddressField(
-    )
+    ip_address = IPAddressField()
 
 class AntennaProfile(Equipment):
     azimuth = models.CharField(max_length=30)

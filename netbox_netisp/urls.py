@@ -47,4 +47,9 @@ urlpatterns = [
     path("antenna-profile/add", AntennaProfileEditView.as_view(), name="antennaprofile_add"),
     path("antenna-profile/<int:pk>/edit/", AntennaProfileEditView.as_view(), name="antennaprofile_edit"),
     path("antenna-profile/<int:pk>/", AntennaProfileView.as_view(), name="antennaprofile"),
+
+    path("customer-premise-equipment/", CustomerPremiseEquipmentListView.as_view(), name="customerpremiseequipment_list"),
+    path("customer-premise-equipment/add", CustomerPremiseEquipmentEditView.as_view(), name="customerpremiseequipment_add"),
+    path("customer-premise-equipment/<int:pk>/edit/", CustomerPremiseEquipmentEditView.as_view(), name="customerpremiseequipment_edit"),
+    path("customer-premise-equipment/<int:pk>/", CustomerPremiseEquipmentView.as_view(), name="customerpremiseequipment")
 ]

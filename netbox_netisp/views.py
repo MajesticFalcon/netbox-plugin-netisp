@@ -152,3 +152,14 @@ class AntennaProfileEditView(ObjectEditView, View):
 class AntennaProfileView(ObjectView):
     queryset = AntennaProfile.objects.all()
 
+"""Customer Premise Equipment"""
+class CustomerPremiseEquipmentListView(ObjectListView, View):
+    queryset = CustomerPremiseEquipment.objects.all()
+    table = tables.CustomerPremiseEquipmentTable
+
+class CustomerPremiseEquipmentEditView(ObjectEditView, View):
+    queryset = CustomerPremiseEquipment.objects.all()
+    model_form = forms.CustomerPremiseEquipmentForm
+
+class CustomerPremiseEquipmentView(ObjectView):
+    queryset = CustomerPremiseEquipment.objects.all()

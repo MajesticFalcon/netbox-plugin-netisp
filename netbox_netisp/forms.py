@@ -2,7 +2,7 @@ from django import forms
 from django.urls import reverse
 from utilities.forms import BootstrapMixin, SlugField
 
-from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint
+from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment
 from .models import AntennaProfile
 
 
@@ -87,3 +87,8 @@ class RadioAccessPointForm(BootstrapMixin, forms.ModelForm):
         model = RadioAccessPoint
         fields = ("name", "manufacturer", "device_type", "frequency", "antenna")
 
+class CustomerPremiseEquipmentForm(BootstrapMixin, forms.ModelForm):
+    return_url = forms.CharField(widget=forms.HiddenInput(), initial="/plugins/netbox_netisp/customer-premise-equipment/")
+    class Meta:
+        model = CustomerPremiseEquipment
+        fields = ("ip_address", "manufacturer", "device_type", "serial")
