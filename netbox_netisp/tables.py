@@ -1,14 +1,18 @@
+
 import django_tables2 as tables
+from django_tables2.utils import A  # alias for Accessor
 
 
-from .models import Customer, Address, BillingPackage, Account, Equipment
+from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, AntennaProfile, CustomerPremiseEquipment
 from utilities.tables import (
     BaseTable,
     ButtonsColumn,
     ChoiceFieldColumn,
     TagColumn,
     ToggleColumn,
+
 )
+
 
 
 class CustomerTable(BaseTable):
@@ -55,5 +59,29 @@ class EquipmentTable(BaseTable):
     pk = tables.LinkColumn()
 
     class Meta(BaseTable.Meta):
-        model = Account
-        fields = ("pk", "serial", "manufacturer", "device_type")
+        model = Equipment
+        fields = ("serial", "manufacturer", "device_type", )
+
+class RadioAccessPointTable(EquipmentTable):
+
+    pk = tables.LinkColumn()
+    name = tables.LinkColumn('plugins:netbox_netisp:radioaccesspoint_edit', args=[A("pk")])
+
+    class Meta(BaseTable.Meta):
+        model = RadioAccessPoint
+        fields = ("antenna",)
+
+class AntennaProfileTable(EquipmentTable):
+    name = tables.LinkColumn('plugins:netbox_netisp:antennaprofile', args=[A("pk")])
+
+    class Meta(BaseTable.Meta):
+        model = AntennaProfile
+        fields = ("name",)
+
+class CustomerPremiseEquipmentTable(EquipmentTable):
+
+    pk = tables.LinkColumn('plugins:netbox_netisp:customerpremiseequipment', args=[A("pk")])
+
+    class Meta(BaseTable.Meta):
+        model = CustomerPremiseEquipment
+        fields = ("ip_address",)

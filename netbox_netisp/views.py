@@ -3,6 +3,7 @@ from django.views import View
 from django_tables2 import LazyPaginator, RequestConfig, SingleTableView
 from django.shortcuts import redirect
 from django.utils import timezone
+from utilities.views import GetReturnURLMixin
 
 
 from .netbox_netisp.views.generic import (
@@ -11,7 +12,8 @@ from .netbox_netisp.views.generic import (
     ObjectView,
     ObjectDeleteView,
 )
-from .models import Customer, Address, BillingPackage, Account, Equipment
+from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment,\
+    AntennaProfile
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -125,3 +127,39 @@ class EquipmentView(ObjectView):
 class EquipmentDeleteView(ObjectDeleteView):
     queryset = Equipment.objects.all()
     selected_service = {}
+
+"""Radio Access Point"""
+class RadioAccessPointListView(ObjectListView, View):
+    queryset = RadioAccessPoint.objects.all()
+    table = tables.RadioAccessPointTable
+
+class RadioAccessPointEditView(ObjectEditView, View):
+    queryset = RadioAccessPoint.objects.all()
+    model_form = forms.RadioAccessPointForm
+
+class RadioAccessPointView(ObjectView):
+    queryset = RadioAccessPoint.objects.all()
+
+"""Antenna Profile"""
+class AntennaProfileListView(ObjectListView, View):
+    queryset = AntennaProfile.objects.all()
+    table = tables.AntennaProfileTable
+
+class AntennaProfileEditView(ObjectEditView, View):
+    queryset = AntennaProfile.objects.all()
+    model_form = forms.AntennaProfileForm
+
+class AntennaProfileView(ObjectView):
+    queryset = AntennaProfile.objects.all()
+
+"""Customer Premise Equipment"""
+class CustomerPremiseEquipmentListView(ObjectListView, View):
+    queryset = CustomerPremiseEquipment.objects.all()
+    table = tables.CustomerPremiseEquipmentTable
+
+class CustomerPremiseEquipmentEditView(ObjectEditView, View):
+    queryset = CustomerPremiseEquipment.objects.all()
+    model_form = forms.CustomerPremiseEquipmentForm
+
+class CustomerPremiseEquipmentView(ObjectView):
+    queryset = CustomerPremiseEquipment.objects.all()

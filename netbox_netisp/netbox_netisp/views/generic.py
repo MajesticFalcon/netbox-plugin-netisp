@@ -113,7 +113,6 @@ class ObjectEditView(GetReturnURLMixin, View):
 
         if form.is_valid():
             logger.debug("Form validation was successful")
-
             try:
                 with transaction.atomic():
                     object_created = form.instance.pk is None
