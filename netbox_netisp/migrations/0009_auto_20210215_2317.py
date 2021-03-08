@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('netbox_netisp', '0008_address_slug'),
+        ("netbox_netisp", "0008_address_slug"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='address',
-            name='slug',
+            model_name="address",
+            name="slug",
             field=models.SlugField(unique=True),
         ),
     ]

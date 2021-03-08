@@ -16,7 +16,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-6 col-md-4">
+    <div class="col-sm-4 col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong>CRM</strong>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="list-group-item">
                         <span class="badge pull-right">0</span>
-                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:home' %}">Accounts</a></h4>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:account_list' %}">Accounts</a></h4>
                         <p class="list-group-item-text text-muted">Entities responsible for services</p>
                 </div>
                 <div class="list-group-item">
@@ -43,6 +43,34 @@
                         <p class="list-group-item-text text-muted">Billing packages</p>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>RF</strong>
+            </div>
+            <div class="list-group">
+
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">
+                        <span class="badge pull-right">1000</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:radioaccesspoint_list' %}">Sector Radios</a></h4>
+                        <p class="list-group-item-text text-muted">Access Points that originate RF</p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">15</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:antennaprofile_list' %}">Sector Antennas</a></h4>
+                        <p class="list-group-item-text text-muted">Devices that amplify RF</p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">15</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:customerpremiseequipment_list' %}">Customer Radios</a></h4>
+                        <p class="list-group-item-text text-muted">Radios delivering service to customers</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
