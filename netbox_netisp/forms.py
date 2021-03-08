@@ -85,7 +85,7 @@ class RadioAccessPointForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = RadioAccessPoint
-        fields = ("name", "manufacturer", "device_type", "frequency", "antenna")
+        fields = ("name", "manufacturer", "device_type", "frequency", "antenna", "ip_address")
 
 class CustomerPremiseEquipmentForm(BootstrapMixin, forms.ModelForm):
     return_url = forms.CharField(widget=forms.HiddenInput(), initial="/plugins/netbox_netisp/customer-premise-equipment/")

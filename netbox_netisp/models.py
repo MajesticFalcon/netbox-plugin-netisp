@@ -42,23 +42,17 @@ class Address(ChangeLoggedModel):
 
     def __str__(self):
         if self.street_ordinance:
-            return "{0} {1}. {2} {3}, {4} {5}, {6}".format(
+            return "{0} {1}. {2} {3}".format(
                 self.street_number,
-                self.street_ordinance,
-                self.street_name,
-                self.street_suffix,
-                self.city,
-                self.state_code,
-                self.zip,
+                self.street_ordinance.capitalize(),
+                self.street_name.capitalize(),
+                self.street_suffix.capitalize(),
             )
         else:
-            return "{0} {1} {2}, {3} {4}, {5}".format(
+            return "{0} {1} {2}".format(
                 self.street_number,
-                self.street_name,
-                self.street_suffix,
-                self.city,
-                self.state_code,
-                self.zip,
+                self.street_name.capitalize(),
+                self.street_suffix.capitalize(),
             )
 
 
@@ -117,6 +111,7 @@ class RadioAccessPoint(Equipment):
     frequency = models.CharField(max_length=30, choices=ANTENNA_FREQUENCY_CHOICES)
     name = models.CharField(max_length=30)
     antenna = models.ForeignKey(AntennaProfile, on_delete=models.PROTECT)
+    ip_address = IPAddressField(blank=True, null=True, default="")
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:radioaccesspoint", args=[self.pk])

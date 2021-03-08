@@ -1,5 +1,6 @@
 
 import django_tables2 as tables
+from django.urls import reverse
 from django_tables2.utils import A  # alias for Accessor
 
 
@@ -12,7 +13,9 @@ from .models import (
     RadioAccessPoint,
     AntennaProfile,
     CustomerPremiseEquipment,
-    Service
+    Service,
+    WirelessService,
+    FiberService
 )
 
 from utilities.tables import (
@@ -75,11 +78,11 @@ class EquipmentTable(BaseTable):
 class RadioAccessPointTable(EquipmentTable):
 
     pk = tables.LinkColumn()
-    name = tables.LinkColumn('plugins:netbox_netisp:radioaccesspoint_edit', args=[A("pk")])
+    name = tables.LinkColumn('plugins:netbox_netisp:radioaccesspoint', args=[A("pk")])
 
     class Meta(BaseTable.Meta):
         model = RadioAccessPoint
-        fields = ("antenna",)
+        fields = ("antenna", "ip_address")
 
 class AntennaProfileTable(EquipmentTable):
     name = tables.LinkColumn('plugins:netbox_netisp:antennaprofile', args=[A("pk")])
@@ -99,10 +102,46 @@ class CustomerPremiseEquipmentTable(EquipmentTable):
 class ServiceTable(BaseTable):
     pk = ToggleColumn()
 
-    def render_billing_package__download_speed(self, value):
-        return("{}mbps".format(value))
+    clickable = {'td': {'onclick': lambda record: "window.location='{0}'".format(reverse('plugins:netbox_netisp:account_selected',kwargs={'pk': record.account.pk, 'service_id': record.pk}))}}
+
+    speed = tables.Column(
+        verbose_name="Speed",
+        accessor=A('billing_package__download_speed'),
+        linkify=False,
+        attrs=clickable
+    )
+
+    mrc = tables.Column(
+        verbose_name="MRC",
+        accessor=A('billing_package__price'),
+        linkify=False,
+        attrs=clickable
+    )
+
+    billing_package = tables.Column(attrs=clickable)
+    address = tables.Column(attrs=clickable)
+
+    def render_speed(self, value, record):
+        return "↓ {0}mbps / ↑ {1}mbps ".format(value, record.billing_package.upload_speed)
+
+    def render_mrc(self, value):
+        return "${0}/month".format(value)
 
     class Meta(BaseTable.Meta):
         model = Service
-        fields = ("pk", "billing_package", "address", "billing_package.price", "billing_package.download_speed")
+        fields = ("pk", "billing_package", "address", "mrc", "speed")
 
+
+# May not use these in favor of manual panels in template
+#    the panel provides a more consistent UI similar to what the techs are used to
+class ServiceDetailTable(BaseTable):
+    pk = ToggleColumn()
+
+    class Meta(BaseTable.Meta):
+        model = Service
+        fields = ("type", "cpe.ip_address")
+
+class WirelessServiceDetailTable(ServiceDetailTable):
+    class Meta(BaseTable.Meta):
+        model = WirelessService
+        fields = ("sector",)
