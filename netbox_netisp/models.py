@@ -2,7 +2,7 @@ from django.db import models
 from extras.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
-from dcim.models import Manufacturer, DeviceType
+from dcim.models import Manufacturer, DeviceType, Interface
 from ipam.fields import IPAddressField
 
 class Customer(ChangeLoggedModel):
@@ -42,23 +42,17 @@ class Address(ChangeLoggedModel):
 
     def __str__(self):
         if self.street_ordinance:
-            return "{0} {1}. {2} {3}, {4} {5}, {6}".format(
+            return "{0} {1}. {2} {3}".format(
                 self.street_number,
-                self.street_ordinance,
-                self.street_name,
-                self.street_suffix,
-                self.city,
-                self.state_code,
-                self.zip,
+                self.street_ordinance.capitalize(),
+                self.street_name.capitalize(),
+                self.street_suffix.capitalize(),
             )
         else:
-            return "{0} {1} {2}, {3} {4}, {5}".format(
+            return "{0} {1} {2}".format(
                 self.street_number,
-                self.street_name,
-                self.street_suffix,
-                self.city,
-                self.state_code,
-                self.zip,
+                self.street_name.capitalize(),
+                self.street_suffix.capitalize(),
             )
 
 
@@ -74,7 +68,8 @@ class BillingPackage(ChangeLoggedModel):
         return reverse("plugins:netbox_netisp:billingpackage", args=[self.pk])
 
     def __str__(self):
-        return "for {0}".format(self.name)
+        return "{0}".format(self.name)
+
 
 
 class Account(ChangeLoggedModel):
@@ -83,6 +78,8 @@ class Account(ChangeLoggedModel):
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:account", args=[self.pk])
 
+    def __str__(self):
+        return "{0}".format(self.primary_applicant.name())
 
 class Equipment(ChangeLoggedModel):
     serial = models.CharField(max_length=255)
@@ -114,7 +111,38 @@ class RadioAccessPoint(Equipment):
     frequency = models.CharField(max_length=30, choices=ANTENNA_FREQUENCY_CHOICES)
     name = models.CharField(max_length=30)
     antenna = models.ForeignKey(AntennaProfile, on_delete=models.PROTECT)
+    ip_address = IPAddressField(blank=True, null=True, default="")
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:radioaccesspoint", args=[self.pk])
+
+    def __str__(self):
+        return "{0}".format(self.name)
+
+
+"""Service model"""
+class Service(ChangeLoggedModel):
+    SERVICE_CHOICES = (
+        ("FIBER", "FIBER"),
+        ("WIRELESS", "WIRELESS")
+    )
+
+    SERVICE_STATUS_CHOICES = (
+        ("Active", "Active"),
+        ("Inactive", "Inactive"),
+        ("WO Submitted", "WO Submitted"),
+    )
+
+    type = models.CharField(choices=SERVICE_CHOICES, max_length=30)
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT)
+    billing_package = models.ForeignKey(BillingPackage, on_delete=models.PROTECT)
+    cpe = models.ForeignKey(CustomerPremiseEquipment, on_delete=models.PROTECT)
+    #status = models.CharField(choices=SERVICE_STATUS_CHOICES, max_length=30)
+
+class WirelessService(Service):
+    sector = models.ForeignKey(RadioAccessPoint, on_delete=models.PROTECT)
+
+class FiberService(Service):
+    interface = models.ForeignKey(Interface, on_delete=models.PROTECT)
 

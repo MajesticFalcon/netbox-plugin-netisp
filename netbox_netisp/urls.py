@@ -5,7 +5,6 @@ from .views import *
 from .netbox_netisp.views.generic import HomeView
 
 app_name = "netbox_netisp"
-
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("customers/", CustomerListView.as_view(), name="customer_list"),
@@ -30,6 +29,7 @@ urlpatterns = [
     path("accounts/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
+    path("accounts/<int:pk>/<int:service_id>", AccountView.as_view(), name="account_selected"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
 
     path("equipment/", EquipmentListView.as_view(), name="equipment_list"),
@@ -38,10 +38,11 @@ urlpatterns = [
     path("equipment/<int:pk>/", EquipmentView.as_view(), name="equipment"),
     path("equipment/<int:pk>/delete/", EquipmentDeleteView.as_view(), name="equipment_delete"),
 
+    path("sector/<int:pk>/", RadioAccessPointView.as_view(), name="radioaccesspoint"),
+
     path("sector/", RadioAccessPointListView.as_view(), name="radioaccesspoint_list"),
     path("sector/add", RadioAccessPointEditView.as_view(), name="radioaccesspoint_add"),
     path("sector/<int:pk>/edit", RadioAccessPointEditView.as_view(), name="radioaccesspoint_edit"),
-    path("sector/<int:pk>/", RadioAccessPointView.as_view(), name="radioaccesspoint"),
 
     path("antenna-profile/", AntennaProfileListView.as_view(), name="antennaprofile_list"),
     path("antenna-profile/add", AntennaProfileEditView.as_view(), name="antennaprofile_add"),
@@ -53,3 +54,4 @@ urlpatterns = [
     path("customer-premise-equipment/<int:pk>/edit/", CustomerPremiseEquipmentEditView.as_view(), name="customerpremiseequipment_edit"),
     path("customer-premise-equipment/<int:pk>/", CustomerPremiseEquipmentView.as_view(), name="customerpremiseequipment")
 ]
+

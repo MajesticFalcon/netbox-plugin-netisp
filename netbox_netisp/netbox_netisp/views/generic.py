@@ -184,6 +184,7 @@ class ObjectView(View):
 
     queryset = None
     template_name = None
+    instance = None
 
     def get_template_name(self):
         """
@@ -192,14 +193,13 @@ class ObjectView(View):
         if self.template_name is not None:
             return self.template_name
         model_opts = self.queryset.model._meta
-        print(f"{model_opts.app_label}/{model_opts.model_name}.html")
         return f"{model_opts.app_label}/{model_opts.model_name}.html"
+
 
     def get(self, request, *args, **kwargs):
         """
         Generic GET handler for accessing an object by PK or slug
         """
-
         instance = get_object_or_404(self.queryset, **kwargs)
 
         return render(
