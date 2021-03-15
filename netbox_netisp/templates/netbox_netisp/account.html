@@ -76,7 +76,7 @@
                 <table class="table table-hover panel-body attr-table table-condensed">
                     <tr>
                         <th>Actions</th>
-                        <td><button class="btn btn-primary"><span><i class="fa fa-wrench"></i></span>Repair</button></td>
+                        <td><a class="btn btn-primary" href="{% url 'plugins:netbox_netisp:ticket_add' service_id=selected_service.pk ticket_type='repair' %}">Repair</a></td>
                         <td><button class="btn btn-warning">Put on Hold</button></td>
                         <td><button class="btn btn-danger">Disconnect</button></td>
 
@@ -95,7 +95,7 @@
             <div class="panel-heading">
                 <strong>Service Orders </strong>
             </div>
-
+            {% render_table ticket_table %}
         </div>
     </div>
 </div>
