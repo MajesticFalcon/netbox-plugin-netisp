@@ -9,7 +9,9 @@ from .models import (
     RadioAccessPoint,
     AntennaProfile,
     WirelessService,
-    FiberService
+    FiberService,
+    Ticket,
+
     )
 
 
@@ -55,3 +57,6 @@ class AntennaProfileAdmin(admin.ModelAdmin):
 class AntennaProfileAdmin(admin.ModelAdmin):
     list_display = ("type","account", "address", "billing_package", "cpe", "interface",)
 
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ("service","date_opened", "date_closed", "priority", "notes",)

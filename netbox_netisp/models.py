@@ -4,6 +4,8 @@ from datetime import datetime
 from django.urls import reverse
 from dcim.models import Manufacturer, DeviceType, Interface
 from ipam.fields import IPAddressField
+from django.contrib.auth.models import User
+
 
 class Customer(ChangeLoggedModel):
     first_name = models.CharField(max_length=255)
@@ -140,9 +142,68 @@ class Service(ChangeLoggedModel):
     cpe = models.ForeignKey(CustomerPremiseEquipment, on_delete=models.PROTECT)
     #status = models.CharField(choices=SERVICE_STATUS_CHOICES, max_length=30)
 
+    def __str__(self):
+        return "{0} - {1} - {2}".format(self.account.primary_applicant.name(), self.billing_package.name, self.address)
+
 class WirelessService(Service):
     sector = models.ForeignKey(RadioAccessPoint, on_delete=models.PROTECT)
 
 class FiberService(Service):
     interface = models.ForeignKey(Interface, on_delete=models.PROTECT)
+
+
+"""Employee model"""
+class Employee(ChangeLoggedModel):
+    EMPLOYEE_PERMISSION_CHOICES = (
+        ("Level 1", "Level 1"),
+        ("Level 2", "Level 2"),
+        ("Level 3", "Level 3"),
+    )
+
+    EMPLOYEE_POSITION_CHOICES = (
+        ("Communications Field Technician", "CFT"),
+        ("Help Desk", "Held Desk"),
+        ("Engineer", "Engineer"),
+        ("Manager", "Manager"),
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    hire_date = models.DateTimeField()
+    permission_level = models.CharField(choices=EMPLOYEE_PERMISSION_CHOICES, max_length=255)
+    position = models.CharField(choices=EMPLOYEE_POSITION_CHOICES, max_length=255)
+
+
+"""Service Ticketing model"""
+
+#Parent class
+class Ticket(ChangeLoggedModel):
+    TICKET_SERVICE_PRIORITY_CHOICES = (
+        ("Normal", "Normal"),
+        ("High", "High")
+    )
+
+    TICKET_TYPE_CHOICES = (
+        ("Repair", "Repair"),
+        ("Upgrade", "Upgrade"),
+        ("Install", "Install"),
+        ("Disconnect", "Disconnect"),
+        ("Place Hold", "Place Hold"),
+        ("Remove Hold", "Remove Hold")
+    )
+
+    TICKET_STATUS_CHOICES = (
+        ("Active", "Active"),
+        ("Complete", "Complete")
+    )
+
+    service = models.ForeignKey(Service, on_delete=models.PROTECT)
+    date_opened = models.DateTimeField(auto_now_add=True)
+    date_closed = models.DateTimeField(blank=True, null=True)
+    priority = models.CharField(choices=TICKET_SERVICE_PRIORITY_CHOICES, max_length=255)
+    type = models.CharField(choices=TICKET_TYPE_CHOICES, max_length=255)
+    status = models.CharField(choices=TICKET_STATUS_CHOICES, max_length=255)
+    notes = models.TextField(max_length=255)
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:ticket", args=[self.pk])
 

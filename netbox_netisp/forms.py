@@ -2,7 +2,7 @@ from django import forms
 from django.urls import reverse
 from utilities.forms import BootstrapMixin, SlugField
 
-from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment
+from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment, Ticket
 from .models import AntennaProfile
 
 
@@ -92,3 +92,8 @@ class CustomerPremiseEquipmentForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = CustomerPremiseEquipment
         fields = ("ip_address", "manufacturer", "device_type", "serial")
+
+class TicketForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ("notes","priority")

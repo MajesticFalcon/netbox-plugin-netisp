@@ -13,7 +13,8 @@ from .netbox_netisp.views.generic import (
     ObjectDeleteView,
 )
 from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment,\
-    AntennaProfile, Service, WirelessService, FiberService
+    AntennaProfile, Service, WirelessService, FiberService, Ticket
+
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -144,6 +145,8 @@ class AccountView(ObjectView):
         else:
             self.pick_selected_service_table(None)
 
+        ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+
         return render(
             request,
             self.get_template_name(),
@@ -152,7 +155,8 @@ class AccountView(ObjectView):
                 "service_table": service_table,
                 "service_count": len(services),
                 "selected_service": self.selected_service,
-                "selected_service_template": self.selected_service_template
+                "selected_service_template": self.selected_service_template,
+                "ticket_table": ticket_table
 
             },
         )
@@ -219,3 +223,30 @@ class CustomerPremiseEquipmentEditView(ObjectEditView, View):
 
 class CustomerPremiseEquipmentView(ObjectView):
     queryset = CustomerPremiseEquipment.objects.all()
+
+"""Tickets"""
+
+class TicketListView(ObjectListView, View):
+    queryset = Ticket.objects.all()
+    table = tables.TicketTable
+
+class TicketEditView(ObjectEditView, View):
+    queryset = Ticket.objects.all()
+    model_form = forms.TicketForm
+
+    def alter_obj(self, obj, request, url_args, url_kwargs):
+        if('service_id' in url_kwargs and 'ticket_type' in url_kwargs):
+            obj.service = Service.objects.get(pk=url_kwargs['service_id'])
+            obj.type = url_kwargs['ticket_type'].capitalize()
+
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class TicketView(ObjectView):
+    queryset = Ticket.objects.all()
+
+class TicketDeleteView(ObjectDeleteView):
+    queryset = Ticket.objects.all()
