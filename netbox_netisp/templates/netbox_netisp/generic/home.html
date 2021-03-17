@@ -2,19 +2,10 @@
 {% extends 'base.html' %}
 {% load helpers %}
 
-{% block header %}
-    {{ block.super }}
-    <div class="container">
-        <div class="jumbotron">
-            <h1>NetISP</h1>
-            <p>Welcome to NetISP.</p>
-            <p>The goal of this plugin is to consolidate functionality from other systems into
-            Netbox. From here you will be able to manage users, accounts, services, ticketing, imaging, and more!</p>
-        </div>
-</div>
-{% endblock %}
 
 {% block content %}
+{% include 'netbox_netisp/generic/navigation.html' %}
+
 <div class="row">
     <div class="col-sm-4 col-md-4">
         <div class="panel panel-default">
@@ -23,22 +14,22 @@
             </div>
             <div class="list-group">
                 <div class="list-group-item">
-                        <span class="badge pull-right">2</span>
+                        <span class="badge pull-right">{{ customer_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:customer_list' %}">Customers</a></h4>
                     <p class="list-group-item-text text-muted">Past and present point of contacts for accounts</p>
                 </div>
                 <div class="list-group-item">
-                        <span class="badge pull-right">0</span>
+                        <span class="badge pull-right">{{ account_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:account_list' %}">Accounts</a></h4>
                         <p class="list-group-item-text text-muted">Entities responsible for services</p>
                 </div>
                 <div class="list-group-item">
-                        <span class="badge pull-right">1</span>
+                        <span class="badge pull-right">{{ address_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:address_list' %}">Addresses</a></h4>
                         <p class="list-group-item-text text-muted">Locations created</p>
                 </div>
                 <div class="list-group-item">
-                        <span class="badge pull-right">3</span>
+                        <span class="badge pull-right">{{ billingpackage_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:billingpackage_list' %}">Billing Package</a></h4>
                         <p class="list-group-item-text text-muted">Billing packages</p>
                 </div>
@@ -55,17 +46,17 @@
             </div>
             <div class="list-group">
                 <div class="list-group-item">
-                        <span class="badge pull-right">1000</span>
+                        <span class="badge pull-right">{{ sector_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:radioaccesspoint_list' %}">Sector Radios</a></h4>
                         <p class="list-group-item-text text-muted">Access Points that originate RF</p>
                 </div>
                 <div class="list-group-item">
-                        <span class="badge pull-right">15</span>
+                        <span class="badge pull-right">{{ antenna_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:antennaprofile_list' %}">Sector Antennas</a></h4>
                         <p class="list-group-item-text text-muted">Devices that amplify RF</p>
                 </div>
                 <div class="list-group-item">
-                        <span class="badge pull-right">15</span>
+                        <span class="badge pull-right">{{ cpe_count }}</span>
                         <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:customerpremiseequipment_list' %}">Customer Radios</a></h4>
                         <p class="list-group-item-text text-muted">Radios delivering service to customers</p>
                 </div>

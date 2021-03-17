@@ -14,7 +14,6 @@ class Customer(ChangeLoggedModel):
     birthdate = models.DateTimeField(blank=True, null=True)
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_number = models.CharField(max_length=255, blank=True, null=True)
-    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name()
@@ -37,7 +36,6 @@ class Address(ChangeLoggedModel):
     city = models.CharField(max_length=255)
     state_code = models.CharField(max_length=2)
     zip = models.CharField(max_length=10)
-    slug = models.SlugField(unique=True)
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:address", args=[self.pk])

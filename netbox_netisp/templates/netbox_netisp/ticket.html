@@ -31,6 +31,8 @@
 {% endblock %}
 
 {% block content %}
+{% include 'netbox_netisp/generic/navigation.html' %}
+
 <div class="row">
     <a class="btn btn-info btn-sm" href=" {% url 'plugins:netbox_netisp:ticket_list' %}">Ticket List</a>
     <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:ticket_edit' pk=object.pk %}">Edit</a>

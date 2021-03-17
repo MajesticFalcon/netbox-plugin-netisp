@@ -3,6 +3,8 @@
 {% load helpers %}
 
 {% block content %}
+{% include 'netbox_netisp/generic/navigation.html' %}
+
     <form action="" method="post" enctype="multipart/form-data" class="form form-horizontal">
         {% csrf_token %}
         {% for field in form.hidden_fields %}
