@@ -13,7 +13,8 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
             "first_name",
             "middle_name",
             "last_name",
-            "slug",
+            "phone_number",
+            "email",
         )
 
 
@@ -27,7 +28,6 @@ class AddressForm(BootstrapMixin, forms.ModelForm):
             "city",
             "state_code",
             "zip",
-            "slug",
         )
 
 
@@ -52,10 +52,6 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
         label="Last Name",
     )
 
-    slug = forms.SlugField(
-        required=True,
-        label="Slug",
-    )
 
     class Meta:
         model = Customer

@@ -60,6 +60,19 @@ class AddressEditView(ObjectEditView, View):
 class AddressView(ObjectView):
     queryset = Address.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        current_address = get_object_or_404(self.queryset, **kwargs)
+        associated_services = Service.objects.filter(address=current_address)
+        service_table = tables.ServiceTable(associated_services)
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": current_address,
+                **({"service_table": service_table} if service_table else {}),
+
+            },
+        )
 
 class AddressDeleteView(ObjectDeleteView):
     queryset = Address.objects.all()
@@ -114,6 +127,7 @@ class AccountView(ObjectView):
 
         if selected_service_pk is None:
             self.set_template_name('service_detail_placeholder')
+            return
 
         selected_service_parent = Service.objects.get(pk=selected_service_pk)
         if selected_service_parent.type == 'WIRELESS':
@@ -130,32 +144,52 @@ class AccountView(ObjectView):
         #    and provide the correct service detail db to the template.
         #
         selected_service_pk = kwargs.pop('service_id', None)
+        action = kwargs.pop('action', None)
+
+        ####### Adding section to provide a more complete MVP for users #######
+        if action == 'add_service':
+            service_error = "ERROR: This feature has not yet been implemented"
+        else:
+            service_error = None
+
+        if action == 'place_hold' or action == 'disconnect':
+            service_detail_error = "ERROR: This feature has not yet been implemented"
+        else:
+            service_detail_error = None
+
+        ####### END MVP SECTION #######
 
         current_account = get_object_or_404(self.queryset, **kwargs)
         services = current_account.service_set.all()
+        ticket_table = None
+
         if selected_service_pk:
             self.pick_selected_service_table(selected_service_pk)
             service_table = tables.ServiceTable(services)
             RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
+            ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
 
         elif len(services) > 0:
             self.pick_selected_service_table(services.first().pk)
             service_table = tables.ServiceTable(services)
             RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
+            ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+
         else:
             self.pick_selected_service_table(None)
-
-        ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+            service_table = None
 
         return render(
             request,
             self.get_template_name(),
             {
                 "object": current_account,
-                "service_table": service_table,
+                **({ "service_table": service_table } if service_table else {} ),
                 "service_count": len(services),
-                "selected_service": self.selected_service,
+                **({ "selected_service": self.selected_service } if 'selected_service' in dir(self) else {} ),
                 "selected_service_template": self.selected_service_template,
+                **({ "service_error": service_error } if service_error else {}),
+                **({ "service_detail_error": service_detail_error } if service_detail_error else {}),
                 "ticket_table": ticket_table
 
             },

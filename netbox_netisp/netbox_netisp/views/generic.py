@@ -15,7 +15,11 @@ from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
 from django.contrib import messages
 
+
+
 import logging
+
+from netbox_netisp.models import Service, Account, BillingPackage, Address, RadioAccessPoint, AntennaProfile, CustomerPremiseEquipment, Customer
 
 
 class ObjectListView(View):
@@ -293,4 +297,23 @@ class HomeView(View):
     template_name = "netbox_netisp/generic/home.html"
 
     def get(self, request):
-        return render(request, self.template_name)
+        services = Service.objects.all()
+        accounts = Account.objects.all()
+        billingpackages = BillingPackage.objects.all()
+        addresses = Address.objects.all()
+        sectors = RadioAccessPoint.objects.all()
+        antennas = AntennaProfile.objects.all()
+        cpes = CustomerPremiseEquipment.objects.all()
+        customers = Customer.objects.all()
+
+
+        return render(request, self.template_name, {
+            "service_count": len(services),
+            "account_count": len(accounts),
+            "billingpackage_count": len(billingpackages),
+            "address_count": len(addresses),
+            "sector_count": len(sectors),
+            "antenna_count": len(antennas),
+            "cpe_count": len(cpes),
+            "customer_count": len(customers)
+        })
