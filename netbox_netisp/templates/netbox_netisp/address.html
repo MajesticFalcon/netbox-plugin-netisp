@@ -4,8 +4,11 @@
 {% load plugins %}
 {% load static %}
 {% load tz %}
+{% load render_table from django_tables2 %}
 
 {% block header %}
+{% include 'netbox_netisp/generic/navigation.html' %}
+
     <div class="row noprint">
         <div class="col-sm-8 col-md-9">
             <ol class="breadcrumb">
@@ -42,25 +45,59 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-12">
-        <h2>{{object}}</h2>
-        {% include 'inc/created_updated.html' %}
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="panel panel-default">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <strong>Associated Accounts</strong>
+                <strong>Address</strong>
             </div>
             <table class="table table-hover panel-body attr-table">
                 <tr>
+                    <td>Street number</td>
+                    <td>{{ object.street_number }}</td>
+                </tr>
+                <tr>
+                    <td>Street ordinance</td>
+                    <td>{{ object.street_ordinance }}</td>
+                </tr>
+                <tr>
+                    <td>Street name</td>
+                    <td>{{ object.street_name }}</td>
+                </tr>
+                <tr>
+                    <td>Street suffix</td>
+                    <td>{{ object.street_suffix }}</td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>{{ object.city }}</td>
+                </tr>
+                <tr>
+                    <td>State</td>
+                    <td>{{ object.state_code }}</td>
                 </tr>
             </table>
         </div>
+    </div>
 </div>
 
+<div class="row">
+    <div class="col-md-8 col-md-offset-2"
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Associated Services</strong>
+            </div>
+            {% if service_table %}
+                {% render_table service_table %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% include 'inc/created_updated.html' %}
+    </div>
+</div>
 
 {% endblock %}
 

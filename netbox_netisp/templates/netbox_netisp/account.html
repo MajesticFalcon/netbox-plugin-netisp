@@ -10,6 +10,7 @@
 {% load render_table from django_tables2 %}
 
 {% block content %}
+{% include 'netbox_netisp/generic/navigation.html' %}
 
 
 
@@ -60,8 +61,16 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong>Services</strong> ({{ service_count }})
+                <div class="pull-right">
+                    <a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='add_service' %}" class="label label-primary">Add new service</a>
+                </div>
+                <div><label class="label label-danger">{{ service_error }}</label></div>
             </div>
-            {% render_table service_table %}
+            {% if service_table %}
+                {% render_table service_table %}
+            {% else %}
+                < Service Placeholder >
+            {% endif %}
         </div>
     </div>
 {% if selected_service %}
@@ -69,6 +78,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong>Service Detail</strong>
+                <div><label class="label label-danger">{{ service_detail_error }}</label></div>
+
             </div>
             {% include selected_service_template %}
             <br>
@@ -76,9 +87,9 @@
                 <table class="table table-hover panel-body attr-table table-condensed">
                     <tr>
                         <th>Actions</th>
-                        <td><button class="btn btn-primary"><span><i class="fa fa-wrench"></i></span>Repair</button></td>
-                        <td><button class="btn btn-warning">Put on Hold</button></td>
-                        <td><button class="btn btn-danger">Disconnect</button></td>
+                        <td><a class="btn btn-primary" href="{% url 'plugins:netbox_netisp:ticket_add' service_id=selected_service.pk ticket_type='repair' %}">Repair</a></td>
+                        <td><a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='place_hold' %}" class="btn btn-warning">Put on Hold</a></td>
+                        <td><a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='disconnect' %}" class="btn btn-danger">Disconnect</a></td>
 
                     </tr>
                 </table>
@@ -95,7 +106,11 @@
             <div class="panel-heading">
                 <strong>Service Orders </strong>
             </div>
-
+            {% if ticket_table %}
+                {% render_table ticket_table %}
+            {% else %}
+                < Ticket Table Placeholder >
+            {% endif %}
         </div>
     </div>
 </div>
@@ -115,6 +130,7 @@
             <div class="panel-heading">
                 <p>Account</p>
             </div>
+            < Photo Placeholder >
         </div>
     </div>
     <div class="col-md-4">
@@ -122,6 +138,7 @@
             <div class="panel-heading">
                 <p>Fiber</p>
             </div>
+            < Photo Placeholder >
         </div>
     </div>
     <div class="col-md-4">
@@ -129,6 +146,7 @@
             <div class="panel-heading">
                 <p>Wireless</p>
             </div>
+            < Photo Placeholder >
         </div>
     </div>
 </div>

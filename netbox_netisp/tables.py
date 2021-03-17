@@ -15,7 +15,8 @@ from .models import (
     CustomerPremiseEquipment,
     Service,
     WirelessService,
-    FiberService
+    FiberService,
+    Ticket
 )
 
 from utilities.tables import (
@@ -35,7 +36,7 @@ class CustomerTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Customer
-        fields = ("pk", "first_name", "middle_name", "last_name", "slug")
+        fields = ("pk", "first_name", "middle_name", "last_name")
 
 
 class AddressTable(BaseTable):
@@ -145,3 +146,11 @@ class WirelessServiceDetailTable(ServiceDetailTable):
     class Meta(BaseTable.Meta):
         model = WirelessService
         fields = ("sector",)
+
+
+class TicketTable(BaseTable):
+    pk = tables.LinkColumn()
+
+    class Meta(BaseTable.Meta):
+        model = Ticket
+        fields = ("pk", "service", "status", "date_opened", "date_closed", "priority", "notes")

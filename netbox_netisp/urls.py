@@ -29,6 +29,7 @@ urlpatterns = [
     path("accounts/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
+    path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
     path("accounts/<int:pk>/<int:service_id>", AccountView.as_view(), name="account_selected"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
 
@@ -52,6 +53,14 @@ urlpatterns = [
     path("customer-premise-equipment/", CustomerPremiseEquipmentListView.as_view(), name="customerpremiseequipment_list"),
     path("customer-premise-equipment/add", CustomerPremiseEquipmentEditView.as_view(), name="customerpremiseequipment_add"),
     path("customer-premise-equipment/<int:pk>/edit/", CustomerPremiseEquipmentEditView.as_view(), name="customerpremiseequipment_edit"),
-    path("customer-premise-equipment/<int:pk>/", CustomerPremiseEquipmentView.as_view(), name="customerpremiseequipment")
+    path("customer-premise-equipment/<int:pk>/", CustomerPremiseEquipmentView.as_view(), name="customerpremiseequipment"),
+
+    path("ticket/", TicketListView.as_view(), name="ticket_list"),
+    path("ticket/add/", TicketEditView.as_view(), name="ticket_add"),
+    path("ticket/add/<int:service_id>/<str:ticket_type>/", TicketEditView.as_view(), name="ticket_add"),
+    path("ticket/<int:pk>/edit/", TicketEditView.as_view(), name="ticket_edit"),
+    path("ticket/<int:pk>", TicketView.as_view(), name="ticket"),
+    path("ticket/<int:pk>/delete", TicketDeleteView.as_view(), name="ticket_delete"),
+
 ]
 
