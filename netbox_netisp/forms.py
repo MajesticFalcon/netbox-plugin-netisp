@@ -5,6 +5,7 @@ from utilities.forms import BootstrapMixin, SlugField
 from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment, Ticket
 from .models import AntennaProfile
 
+from django.core.validators import RegexValidator
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -17,8 +18,10 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
             "email",
         )
 
+state_validator = RegexValidator(r'\d', message="Only input the 2 character code for your state", inverse_match=1)
 
 class AddressForm(BootstrapMixin, forms.ModelForm):
+    state_code = forms.CharField(validators=[state_validator])
     class Meta:
         model = Address
         fields = (
