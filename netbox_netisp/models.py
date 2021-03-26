@@ -93,7 +93,7 @@ class CustomerPremiseEquipment(Equipment):
     ip_address = IPAddressField()
 
 class AntennaProfile(Equipment):
-    azimuth = models.CharField(max_length=30)
+    azimuth = models.IntegerField()
     beamwidth = models.IntegerField()
     name = models.CharField(max_length=30)
 
