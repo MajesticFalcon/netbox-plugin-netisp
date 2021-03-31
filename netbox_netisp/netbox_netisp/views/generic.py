@@ -121,7 +121,7 @@ class ObjectEditView(GetReturnURLMixin, View):
                 with transaction.atomic():
                     object_created = form.instance.pk is None
                     obj = form.save()
-
+                    self.new_obj = obj
                     # Check that the new object conforms with any assigned object-level permissions
                     self.queryset.get(pk=obj.pk)
 

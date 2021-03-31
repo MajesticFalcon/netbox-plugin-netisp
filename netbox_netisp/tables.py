@@ -16,7 +16,7 @@ from .models import (
     Service,
     WirelessService,
     FiberService,
-    Ticket
+    Ticket,
 )
 
 from utilities.tables import (
@@ -130,7 +130,7 @@ class ServiceTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Service
-        fields = ("pk", "billing_package", "address", "mrc", "speed")
+        fields = ("pk", "billing_package", "address", "mrc", "speed", "status")
 
 
 # May not use these in favor of manual panels in template
@@ -149,8 +149,11 @@ class WirelessServiceDetailTable(ServiceDetailTable):
 
 
 class TicketTable(BaseTable):
-    pk = tables.LinkColumn()
+    
 
+    
+    type = tables.Column(verbose_name="Ticket Type")
+    service__type = tables.LinkColumn(verbose_name="Service Type")
     class Meta(BaseTable.Meta):
         model = Ticket
-        fields = ("pk", "service", "status", "date_opened", "date_closed", "priority", "notes")
+        fields = ("pk", "type", "service", "service__type", "date_opened", "date_closed", "priority", "notes")
