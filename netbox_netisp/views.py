@@ -300,7 +300,14 @@ class TicketDeleteView(ObjectDeleteView):
 class WirelessTicketEditView(ObjectEditView, View):
     queryset = WirelessTicket.objects.all()
     modal_form = forms.WirelessTicketForm
-    
+
+class WirelessTicketView(ObjectView):
+    queryset = WirelessTicket.objects.all()
+
+class WirelessTicketListView(ObjectListView, View):
+    queryset = WirelessTicket.objects.all()
+    table = tables.WirelessTicketTable
+
 """Services"""
 class ServiceListView(ObjectListView, View):
     queryset = Service.objects.all()
@@ -310,14 +317,14 @@ class ServiceEditView(ObjectEditView, View):
     queryset = Service.objects.all()
     model_form = forms.ServiceForm
 
-
     def create_install_ticket(self, type):
-        ticket = WirelessInstallTicket()
-        ticket.priority = 'Normal'
-        ticket.type = 'Install'
-        ticket.status = 'Active'
-        ticket.service = self.new_obj
-        ticket.save()
+        if type == 'WIRELESS':
+            ticket = WirelessTicket()
+            ticket.priority = 'Normal'
+            ticket.type = 'Install'
+            ticket.status = 'Active'
+            ticket.service = self.new_obj
+            ticket.save()
 
     def alter_obj(self, obj, request, url_args, url_kwargs):
         obj.account = Account.objects.get(pk=url_kwargs['account_id'])

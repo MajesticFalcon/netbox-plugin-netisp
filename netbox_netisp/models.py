@@ -209,10 +209,7 @@ class Ticket(ChangeLoggedModel):
     objects = InheritanceManager()
 
     def get_absolute_url(self):
-        if self.service.type == 'WIRELESS':
-            return reverse("plugins:netbox_netisp:wirelessticket", args=[self.pk])
-        else:
-            return reverse("plugins:netbox_netisp:ticket", args=[self.pk])
+        return reverse("plugins:netbox_netisp:ticket", args=[self.pk])
 
 class WirelessTicket(Ticket):
     rssi = models.IntegerField(null=True)

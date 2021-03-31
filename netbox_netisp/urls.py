@@ -61,7 +61,10 @@ urlpatterns = [
     path("ticket/<int:pk>/edit/", TicketEditView.as_view(), name="ticket_edit"),
     path("ticket/<int:pk>", TicketView.as_view(), name="ticket"),
     path("ticket/<int:pk>/delete", TicketDeleteView.as_view(), name="ticket_delete"),
-    
+
+    path("wireless-tickets/", WirelessTicketListView.as_view(), name="wirelessticket_list"),
+
+    path("wireless-ticket/add/", WirelessTicketEditView.as_view(), name="wirelessticket_add"),
     path("wireless-ticket/<int:pk>/edit/", WirelessTicketEditView.as_view(), name="wirelessticket_edit"),
     path("wireless-ticket/<int:pk>", WirelessTicketView.as_view(), name="wirelessticket"),
 

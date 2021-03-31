@@ -4,20 +4,7 @@ from django.urls import reverse
 from django_tables2.utils import A  # alias for Accessor
 
 
-from .models import (
-    Customer,
-    Address,
-    BillingPackage,
-    Account,
-    Equipment,
-    RadioAccessPoint,
-    AntennaProfile,
-    CustomerPremiseEquipment,
-    Service,
-    WirelessService,
-    FiberService,
-    Ticket,
-)
+from .models import *
 
 from utilities.tables import (
     BaseTable,
@@ -149,11 +136,18 @@ class WirelessServiceDetailTable(ServiceDetailTable):
 
 
 class TicketTable(BaseTable):
-    
-
-    
     type = tables.Column(verbose_name="Ticket Type")
     service__type = tables.LinkColumn(verbose_name="Service Type")
     class Meta(BaseTable.Meta):
         model = Ticket
         fields = ("pk", "type", "service", "service__type", "date_opened", "date_closed", "priority", "notes")
+
+class WirelessTicketTable(BaseTable):
+
+    pk = tables.LinkColumn()
+
+    type = tables.Column(verbose_name="Ticket Type")
+
+    class Meta(BaseTable.Meta):
+        model = WirelessTicket
+        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
