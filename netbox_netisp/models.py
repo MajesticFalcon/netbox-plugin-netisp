@@ -195,7 +195,14 @@ class Ticket(ChangeLoggedModel):
 
     TICKET_STATUS_CHOICES = (
         ("Active", "Active"),
+        ("Awaiting Confirmation", "Awaiting Confirmation"),
         ("Complete", "Complete")
+    )
+
+    TICKET_TECHNICIAN_CHOICES = (
+        ("Roger", "Roger Roger"),
+        ("Joe", "Joe Dirt"),
+        ("Tom", "Tom Riddle")
     )
 
     service = models.ForeignKey(Service, on_delete=models.PROTECT)
@@ -205,17 +212,23 @@ class Ticket(ChangeLoggedModel):
     type = models.CharField(choices=TICKET_TYPE_CHOICES, max_length=255)
     status = models.CharField(choices=TICKET_STATUS_CHOICES, max_length=255)
     notes = models.TextField(max_length=255)
-    technician = models.CharField(max_length=255)
+    technician = models.CharField(choices=TICKET_TECHNICIAN_CHOICES, max_length=255)
     objects = InheritanceManager()
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:ticket", args=[self.pk])
 
 class WirelessTicket(Ticket):
+    WIRELESS_TICKET_CONCLUSION_CHOICES = (
+        ("PASS", "PASS"),
+        ("FAIL", "FAIL"),
+        ("SPECIAL", "SPECIAL - SEE NOTES (PASS)"),
+        ("SPECIAL", "SPECIAL - SEE NOTES (FAIL)")
+    )
     rssi = models.IntegerField(null=True)
     local_noise_floor = models.IntegerField(null=True)
     survey_height = models.IntegerField(null=True)
-    conclusion = models.CharField(max_length=255,null=True)
+    conclusion = models.CharField(choices=WIRELESS_TICKET_CONCLUSION_CHOICES,max_length=255,null=True)
     cpe = models.ForeignKey(Device, on_delete=models.PROTECT, null=True)
 
 

@@ -1,18 +1,5 @@
 from django.contrib import admin
-from .models import (
-    Customer,
-    Address,
-    BillingPackage,
-    Account,
-    Equipment,
-    CustomerPremiseEquipment,
-    RadioAccessPoint,
-    AntennaProfile,
-    WirelessService,
-    FiberService,
-    Ticket,
-
-    )
+from .models import *
 
 
 
@@ -60,3 +47,11 @@ class AntennaProfileAdmin(admin.ModelAdmin):
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
     list_display = ("service","date_opened", "date_closed", "priority", "notes",)
+
+@admin.register(WirelessTicket)
+class WirelessTicketAdmin(admin.ModelAdmin):
+    exclude = ('',)
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    exclude = ('',)

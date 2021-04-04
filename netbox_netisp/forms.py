@@ -26,6 +26,7 @@ class AddressForm(BootstrapMixin, forms.ModelForm):
         model = Address
         fields = (
             "street_number",
+            "street_ordinance",
             "street_name",
             "street_suffix",
             "city",
@@ -110,7 +111,8 @@ class TicketForm(BootstrapMixin, forms.ModelForm):
 class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = WirelessTicket
-        exclude = ('',)
+        exclude = ('status', 'type')
+        field_order = ['password']
 
 class ServiceForm(BootstrapMixin, forms.ModelForm):
     

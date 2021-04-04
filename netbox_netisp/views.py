@@ -6,7 +6,6 @@ from django.utils import timezone
 from utilities.views import GetReturnURLMixin
 from django.urls import reverse
 
-
 from .netbox_netisp.views.generic import (
     ObjectListView,
     ObjectEditView,
@@ -109,7 +108,15 @@ class AccountListView(ObjectListView, View):
 class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
-
+    def get(self, request, *args, **kwargs):
+        if "customer_pk" in kwargs:
+            account = Account()
+            customer = Customer.objects.get(pk=kwargs["customer_pk"])
+            account.primary_applicant = customer
+            account.save()
+            return redirect(account)
+        else:
+            return super().get(request, *args, **kwargs)
 
 class AccountView(ObjectView):
     queryset = Account.objects.all()
@@ -299,7 +306,15 @@ class TicketDeleteView(ObjectDeleteView):
 
 class WirelessTicketEditView(ObjectEditView, View):
     queryset = WirelessTicket.objects.all()
-    modal_form = forms.WirelessTicketForm
+    model_form = forms.WirelessTicketForm
+    template_name = 'netbox_netisp/wirelessticket_edit.html'
+
+    def alter_obj(self, obj, request, url_args, url_kwargs):
+        if '_complete' in request.POST:
+            obj.status = 'Awaiting Confirmation'
+        else:
+            pass
+        return obj
 
 class WirelessTicketView(ObjectView):
     queryset = WirelessTicket.objects.all()
@@ -327,14 +342,16 @@ class ServiceEditView(ObjectEditView, View):
             ticket.save()
 
     def alter_obj(self, obj, request, url_args, url_kwargs):
-        obj.account = Account.objects.get(pk=url_kwargs['account_id'])
+        obj.account = Account.objects.get(pk=url_kwargs['account_pk'])
         obj.status = "WO Submitted"
         return obj
 
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
         self.create_install_ticket(type=request.POST.get('type'))
-        return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_id'], self.new_obj.pk]))
+        return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_pk'], self.new_obj.pk]))
+
+
 
 
 

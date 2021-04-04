@@ -27,6 +27,7 @@ urlpatterns = [
 
     path("accounts/", AccountListView.as_view(), name="account_list"),
     path("accounts/add", AccountEditView.as_view(), name="account_add"),
+    path("accounts/<int:customer_pk>/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
     path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
@@ -63,14 +64,13 @@ urlpatterns = [
     path("ticket/<int:pk>/delete", TicketDeleteView.as_view(), name="ticket_delete"),
 
     path("wireless-tickets/", WirelessTicketListView.as_view(), name="wirelessticket_list"),
-
     path("wireless-ticket/add/", WirelessTicketEditView.as_view(), name="wirelessticket_add"),
     path("wireless-ticket/<int:pk>/edit/", WirelessTicketEditView.as_view(), name="wirelessticket_edit"),
     path("wireless-ticket/<int:pk>", WirelessTicketView.as_view(), name="wirelessticket"),
 
 
     path("service/", ServiceListView.as_view(), name="service_list"),
-    path("service/add/<int:account_id>", ServiceEditView.as_view(), name="service_add"),
+    path("service/add/<int:account_pk>", ServiceEditView.as_view(), name="service_add"),
 
 ]
 

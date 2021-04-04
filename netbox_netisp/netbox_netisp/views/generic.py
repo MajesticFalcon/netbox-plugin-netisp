@@ -19,7 +19,7 @@ from django.contrib import messages
 
 import logging
 
-from netbox_netisp.models import Service, Account, BillingPackage, Address, RadioAccessPoint, AntennaProfile, CustomerPremiseEquipment, Customer
+from netbox_netisp.models import *
 
 
 class ObjectListView(View):
@@ -305,6 +305,7 @@ class HomeView(View):
         antennas = AntennaProfile.objects.all()
         cpes = CustomerPremiseEquipment.objects.all()
         customers = Customer.objects.all()
+        wirelesstickets = WirelessTicket.objects.all()
 
 
         return render(request, self.template_name, {
@@ -315,5 +316,6 @@ class HomeView(View):
             "sector_count": len(sectors),
             "antenna_count": len(antennas),
             "cpe_count": len(cpes),
-            "customer_count": len(customers)
+            "customer_count": len(customers),
+            "wirelessticket_count": len(wirelesstickets)
         })

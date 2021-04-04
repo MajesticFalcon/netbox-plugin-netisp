@@ -5,6 +5,33 @@
 
 {% block content %}
 {% include 'netbox_netisp/generic/navigation.html' %}
+<div class="row">
+    <div class="col-sm-4 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Ticketing</strong>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">
+                        <span class="badge pull-right">{{ wirelessticket_count }}</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:wirelessticket_list' %}">Wireless Tickets</a></h4>
+                    <p class="list-group-item-text text-muted"></p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">{{ fiberticket_count }}</span>
+                        <h4 class="list-group-item-heading"><a href="#">Fiber Tickets</a></h4>
+                    <p class="list-group-item-text text-muted"></p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">{{ fiberticket_count }}</span>
+                        <h4 class="list-group-item-heading"><a href="#">Tickets awaiting confirmation</a></h4>
+                    <p class="list-group-item-text text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-sm-4 col-md-4">

@@ -144,7 +144,7 @@ class TicketTable(BaseTable):
 
 class WirelessTicketTable(BaseTable):
 
-    pk = tables.LinkColumn()
+    pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket', args=[A("pk")])
 
     type = tables.Column(verbose_name="Ticket Type")
 
