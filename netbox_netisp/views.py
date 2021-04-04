@@ -110,15 +110,14 @@ class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
     def get(self, request, *args, **kwargs):
-        print(kwargs)
         if "customer_pk" in kwargs:
             account = Account()
-            customer = Customer.objects.get(pk=kwargs["customer_pk"]) #get current customer we're talking about
+            customer = Customer.objects.get(pk=kwargs["customer_pk"])
             account.primary_applicant = customer
-            account.save() #saves to db
+            account.save()
             return redirect(account)
-
-        return super().get(request, *args, **kwargs)
+        else:
+            return super().get(request, *args, **kwargs)
 
 class AccountView(ObjectView):
     queryset = Account.objects.all()
@@ -292,5 +291,3 @@ class TicketView(ObjectView):
 
 class TicketDeleteView(ObjectDeleteView):
     queryset = Ticket.objects.all()
-    
-"""Register"""
