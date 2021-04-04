@@ -27,6 +27,7 @@ urlpatterns = [
 
     path("accounts/", AccountListView.as_view(), name="account_list"),
     path("accounts/add", AccountEditView.as_view(), name="account_add"),
+    path("accounts/<int:customer_pk>/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
     path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),

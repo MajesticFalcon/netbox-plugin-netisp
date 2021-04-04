@@ -28,6 +28,7 @@ class AddressForm(BootstrapMixin, forms.ModelForm):
             "street_number",
             "street_name",
             "street_suffix",
+            "street_ordinance",
             "city",
             "state_code",
             "zip",

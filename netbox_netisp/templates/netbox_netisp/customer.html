@@ -38,7 +38,6 @@
     <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:customer_edit' pk=object.pk %}">Edit</a>
     <a class="btn btn-danger btn-sm" href=" {% url 'plugins:netbox_netisp:customer_delete' pk=object.pk %}">Delete</a>
 
-
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -59,9 +58,12 @@
                 </tr>
             </table>
         </div>
+
     </div>
 </div>
 
+<center><a class="btn btn-primary btn-sm"  href=" {% url 'plugins:netbox_netisp:account_add' customer_pk=object.pk %}">Create Account</a></center>
+<br>
     {% include 'inc/created_updated.html' %}
 
 {% endblock %}
