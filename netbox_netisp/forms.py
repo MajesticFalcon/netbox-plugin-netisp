@@ -26,6 +26,7 @@ class AddressForm(BootstrapMixin, forms.ModelForm):
         model = Address
         fields = (
             "street_number",
+            "street_ordinance",
             "street_name",
             "street_suffix",
             "city",

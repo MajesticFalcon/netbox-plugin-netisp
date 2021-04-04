@@ -5,7 +5,6 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from utilities.views import GetReturnURLMixin
 
-
 from .netbox_netisp.views.generic import (
     ObjectListView,
     ObjectEditView,
@@ -110,7 +109,15 @@ class AccountListView(ObjectListView, View):
 class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
-
+    def get(self, request, *args, **kwargs):
+        if "customer_pk" in kwargs:
+            account = Account()
+            customer = Customer.objects.get(pk=kwargs["customer_pk"])
+            account.primary_applicant = customer
+            account.save()
+            return redirect(account)
+        else:
+            return super().get(request, *args, **kwargs)
 
 class AccountView(ObjectView):
     queryset = Account.objects.all()
