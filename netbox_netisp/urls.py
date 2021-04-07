@@ -30,8 +30,8 @@ urlpatterns = [
     path("accounts/<int:customer_pk>/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
-    path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
     path("accounts/<int:pk>/<int:service_id>", AccountView.as_view(), name="account_selected"),
+    path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
 
     path("equipment/", EquipmentListView.as_view(), name="equipment_list"),
@@ -67,8 +67,10 @@ urlpatterns = [
     path("wireless-ticket/add/", WirelessTicketEditView.as_view(), name="wirelessticket_add"),
     path("wireless-ticket/<int:pk>/edit/", WirelessTicketEditView.as_view(), name="wirelessticket_edit"),
     path("wireless-ticket/<int:pk>", WirelessTicketView.as_view(), name="wirelessticket"),
-
-
+    
+    path("wireless-ticket/confirmations", WirelessTicketListConfirmationsView.as_view(), name="wirelessticket_confirm_list"),
+    path("wireless-ticket/<int:pk>/confirmation", WirelessTicketConfirmationView.as_view(), name="wirelessticket_confirm"),
+    
     path("service/", ServiceListView.as_view(), name="service_list"),
     path("service/add/<int:account_pk>", ServiceEditView.as_view(), name="service_add"),
 

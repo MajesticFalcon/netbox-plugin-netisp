@@ -215,8 +215,6 @@ class Ticket(ChangeLoggedModel):
     technician = models.CharField(choices=TICKET_TECHNICIAN_CHOICES, max_length=255)
     objects = InheritanceManager()
 
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:ticket", args=[self.pk])
 
 class WirelessTicket(Ticket):
     WIRELESS_TICKET_CONCLUSION_CHOICES = (
@@ -231,4 +229,6 @@ class WirelessTicket(Ticket):
     conclusion = models.CharField(choices=WIRELESS_TICKET_CONCLUSION_CHOICES,max_length=255,null=True)
     cpe = models.ForeignKey(Device, on_delete=models.PROTECT, null=True)
 
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:wirelessticket", args=[self.pk])
 

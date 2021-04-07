@@ -35,14 +35,30 @@
 
 <div class="row">
     <a class="btn btn-info btn-sm" href=" {% url 'plugins:netbox_netisp:wirelessticket_list' %}">Ticket List</a>
-    <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:wirelessticket_edit' pk=object.pk %}">Edit</a>
 
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <strong>Wireless Ticket Edit</strong>
+                <strong>Wireless Ticket</strong>
             </div>
             <table class="table table-hover panel-body attr-table">
+                <tr>
+                    <td>Service</td>
+                    <td>{{ object.service }}</td>
+                </tr>
+                <tr>
+                    <td>Ticket Type</td>
+                    <td>{{ object.type }}</td>
+                </tr>
+                <tr>
+                    <td>Priority</td>
+                    <td>{{ object.priority }}</td>
+                </tr>
+
+                <tr>
+                    <td>Status</td>
+                    <td>{{ object.status }}</td>
+                </tr>
                 <tr>
                     <td>RSSI</td>
                     <td>{{ object.rssi }}</td>
@@ -63,7 +79,10 @@
                     <td>Conclusion</td>
                     <td>{{ object.conclusion }}</td>
                 </tr>
-
+                <tr>
+                    <td>Notes</td>
+                    <td>{{ object.notes }}</td>
+                </tr>
             </table>
         </div>
     </div>

@@ -114,6 +114,25 @@ class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
         exclude = ('status', 'type')
         field_order = ['password']
 
+class WirelessTicketConfirmationForm(BootstrapMixin, forms.ModelForm):
+
+    service = forms.ModelChoiceField(queryset=Service.objects.all(),disabled=True)
+    date_closed = forms.DateTimeField(disabled=True)
+    priority = forms.CharField(disabled=True)
+    type = forms.CharField(disabled=True)
+    status = forms.CharField(disabled=True)
+    notes = forms.CharField(widget=forms.Textarea,disabled=True)
+    technician = forms.CharField(disabled=True)
+    rssi = forms.IntegerField(disabled=True)
+    local_noise_floor = forms.IntegerField(disabled=True)
+    survey_height = forms.IntegerField(disabled=True)
+    conclusion = forms.CharField(disabled=True)
+    cpe = forms.ModelChoiceField(queryset=Device.objects.all(),disabled=True)
+
+    class Meta:
+        model = WirelessTicket
+        exclude = ('',
+                   )
 class ServiceForm(BootstrapMixin, forms.ModelForm):
     
     billing_package = forms.ModelChoiceField(queryset=BillingPackage.objects.all())

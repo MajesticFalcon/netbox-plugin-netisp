@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django_tables2 import LazyPaginator, RequestConfig, SingleTableView
@@ -137,8 +139,8 @@ class AccountView(ObjectView):
             return
 
         selected_service_parent = Service.objects.get(pk=selected_service_pk)
-        if selected_service_parent.type == 'WIRELESS' and status=='Complete':
-            self.selected_service = WirelessService.objects.get(pk=selected_service_pk)
+        if selected_service_parent.type == 'WIRELESS':
+            self.selected_service = Service.objects.get(pk=selected_service_pk)
             self.set_template_name('wireless_service_detail')
         elif selected_service_parent.type == 'FIBER' and status=='Complete':
             selected_service = FiberService.objects.get(pk=selected_service_pk)
@@ -154,20 +156,6 @@ class AccountView(ObjectView):
         #    and provide the correct service detail db to the template.
         #
         selected_service_pk = kwargs.pop('service_id', None)
-        action = kwargs.pop('action', None)
-
-        ####### Adding section to provide a more complete MVP for users #######
-        if action == 'add_service':
-            service_error = "ERROR: This feature has not yet been implemented"
-        else:
-            service_error = None
-
-        if action == 'place_hold' or action == 'disconnect':
-            service_detail_error = "ERROR: This feature has not yet been implemented"
-        else:
-            service_detail_error = None
-
-        ####### END MVP SECTION #######
 
         current_account = get_object_or_404(self.queryset, **kwargs)
         services = current_account.service_set.all()
@@ -177,7 +165,7 @@ class AccountView(ObjectView):
             self.pick_selected_service_table(selected_service_pk)
             service_table = tables.ServiceTable(services)
             RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
-            ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+            ticket_table = tables.WirelessTicketTable(self.selected_service.ticket_set.all())
 
         elif len(services) > 0:
             self.pick_selected_service_table(services.first().pk)
@@ -186,7 +174,7 @@ class AccountView(ObjectView):
             
             #When installing, the wireless/fiber service hasnt been created yet.
             if self.selected_service != '':
-                ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+                ticket_table = tables.WirelessTicketTable(self.selected_service.ticket_set.all())
 
         else:
             self.pick_selected_service_table(None)
@@ -201,8 +189,6 @@ class AccountView(ObjectView):
                 "service_count": len(services),
                 **({ "selected_service": self.selected_service } if 'selected_service' in dir(self) else {} ),
                 "selected_service_template": self.selected_service_template,
-                **({ "service_error": service_error } if service_error else {}),
-                **({ "service_detail_error": service_detail_error } if service_detail_error else {}),
                 "ticket_table": ticket_table
 
             },
@@ -312,6 +298,7 @@ class WirelessTicketEditView(ObjectEditView, View):
     def alter_obj(self, obj, request, url_args, url_kwargs):
         if '_complete' in request.POST:
             obj.status = 'Awaiting Confirmation'
+            obj.date_closed = date.today()
         else:
             pass
         return obj
@@ -320,8 +307,27 @@ class WirelessTicketView(ObjectView):
     queryset = WirelessTicket.objects.all()
 
 class WirelessTicketListView(ObjectListView, View):
-    queryset = WirelessTicket.objects.all()
+    queryset = WirelessTicket.objects.filter(status='Active')
     table = tables.WirelessTicketTable
+
+class WirelessTicketListConfirmationsView(ObjectListView, View):
+    queryset = WirelessTicket.objects.filter(status='Awaiting Confirmation')
+    table = tables.WirelessTicketConfirmationTable
+    template_name = 'netbox_netisp/wirelessticket/confirm_list.html'
+
+class WirelessTicketConfirmationView(ObjectEditView, View):
+    queryset = WirelessTicket.objects.all()
+    model_form = forms.WirelessTicketConfirmationForm
+    template_name = 'netbox_netisp/wirelessticket/confirm.html'
+
+    def post(self, request, *args, **kwargs):
+        current_ticket = get_object_or_404(self.queryset, **kwargs)
+        current_ticket.status = 'Complete'
+        current_ticket.save()
+        current_service = current_ticket.service
+        current_service.status = 'Active'
+        current_service.save()
+        return redirect(current_ticket)
 
 """Services"""
 class ServiceListView(ObjectListView, View):
