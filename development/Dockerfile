@@ -31,6 +31,7 @@ RUN echo "import sys" >> /opt/netbox/netbox/netbox/settings.py && \
 
 # Work around https://github.com/rq/django-rq/issues/421
 RUN pip install django-rq==2.3.2
+RUN pip install django-model-utils
 
 # -------------------------------------------------------------------------------------
 # Install Netbox Plugin

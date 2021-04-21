@@ -4,20 +4,7 @@ from django.urls import reverse
 from django_tables2.utils import A  # alias for Accessor
 
 
-from .models import (
-    Customer,
-    Address,
-    BillingPackage,
-    Account,
-    Equipment,
-    RadioAccessPoint,
-    AntennaProfile,
-    CustomerPremiseEquipment,
-    Service,
-    WirelessService,
-    FiberService,
-    Ticket
-)
+from .models import *
 
 from utilities.tables import (
     BaseTable,
@@ -130,7 +117,7 @@ class ServiceTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Service
-        fields = ("pk", "billing_package", "address", "mrc", "speed")
+        fields = ("pk", "billing_package", "address", "mrc", "speed", "status")
 
 
 # May not use these in favor of manual panels in template
@@ -149,8 +136,24 @@ class WirelessServiceDetailTable(ServiceDetailTable):
 
 
 class TicketTable(BaseTable):
-    pk = tables.LinkColumn()
-
+    type = tables.Column(verbose_name="Ticket Type")
     class Meta(BaseTable.Meta):
         model = Ticket
-        fields = ("pk", "service", "status", "date_opened", "date_closed", "priority", "notes")
+        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+
+class WirelessTicketTable(BaseTable):
+
+    pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_edit', args=[A("pk")])
+
+    type = tables.Column(verbose_name="Ticket Type")
+
+    class Meta(BaseTable.Meta):
+        model = WirelessTicket
+        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+
+class WirelessTicketConfirmationTable(WirelessTicketTable):
+    pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_confirm', args=[A("pk")])
+    
+    class Meta(BaseTable.Meta):
+        model = WirelessTicket
+        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")

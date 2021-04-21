@@ -62,7 +62,7 @@
             <div class="panel-heading">
                 <strong>Services</strong> ({{ service_count }})
                 <div class="pull-right">
-                    <a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='add_service' %}" class="label label-primary">Add new service</a>
+                    <a href="{% url 'plugins:netbox_netisp:service_add' account_pk=object.pk %}" class="label label-primary">Add new service</a>
                 </div>
                 <div><label class="label label-danger">{{ service_error }}</label></div>
             </div>
