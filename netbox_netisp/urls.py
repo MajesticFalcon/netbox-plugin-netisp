@@ -27,10 +27,11 @@ urlpatterns = [
 
     path("accounts/", AccountListView.as_view(), name="account_list"),
     path("accounts/add", AccountEditView.as_view(), name="account_add"),
+    path("accounts/<int:customer_pk>/add", AccountEditView.as_view(), name="account_add"),
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
-    path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
     path("accounts/<int:pk>/<int:service_id>", AccountView.as_view(), name="account_selected"),
+    path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
 
     path("equipment/", EquipmentListView.as_view(), name="equipment_list"),
@@ -55,12 +56,23 @@ urlpatterns = [
     path("customer-premise-equipment/<int:pk>/edit/", CustomerPremiseEquipmentEditView.as_view(), name="customerpremiseequipment_edit"),
     path("customer-premise-equipment/<int:pk>/", CustomerPremiseEquipmentView.as_view(), name="customerpremiseequipment"),
 
-    path("ticket/", TicketListView.as_view(), name="ticket_list"),
+    path("tickets/", TicketListView.as_view(), name="ticket_list"),
     path("ticket/add/", TicketEditView.as_view(), name="ticket_add"),
     path("ticket/add/<int:service_id>/<str:ticket_type>/", TicketEditView.as_view(), name="ticket_add"),
     path("ticket/<int:pk>/edit/", TicketEditView.as_view(), name="ticket_edit"),
     path("ticket/<int:pk>", TicketView.as_view(), name="ticket"),
     path("ticket/<int:pk>/delete", TicketDeleteView.as_view(), name="ticket_delete"),
+
+    path("wireless-tickets/", WirelessTicketListView.as_view(), name="wirelessticket_list"),
+    path("wireless-ticket/add/", WirelessTicketEditView.as_view(), name="wirelessticket_add"),
+    path("wireless-ticket/<int:pk>/edit/", WirelessTicketEditView.as_view(), name="wirelessticket_edit"),
+    path("wireless-ticket/<int:pk>", WirelessTicketView.as_view(), name="wirelessticket"),
+    
+    path("wireless-ticket/confirmations", WirelessTicketListConfirmationsView.as_view(), name="wirelessticket_confirm_list"),
+    path("wireless-ticket/<int:pk>/confirmation", WirelessTicketConfirmationView.as_view(), name="wirelessticket_confirm"),
+    
+    path("service/", ServiceListView.as_view(), name="service_list"),
+    path("service/add/<int:account_pk>", ServiceEditView.as_view(), name="service_add"),
 
 ]
 

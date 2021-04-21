@@ -1,8 +1,8 @@
 from django import forms
 from django.urls import reverse
-from utilities.forms import BootstrapMixin, SlugField
+from utilities.forms import BootstrapMixin, SlugField, DynamicModelChoiceField, APISelect
 
-from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment, Ticket
+from .models import *
 from .models import AntennaProfile
 
 from django.core.validators import RegexValidator
@@ -26,6 +26,7 @@ class AddressForm(BootstrapMixin, forms.ModelForm):
         model = Address
         fields = (
             "street_number",
+            "street_ordinance",
             "street_name",
             "street_suffix",
             "city",
@@ -62,6 +63,16 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
 
 
 class AccountForm(BootstrapMixin, forms.ModelForm):
+
+    primary_applicant = DynamicModelChoiceField(
+        queryset=Customer.objects.all(),
+        required=True,
+        display_field='name',
+        widget=APISelect(
+            api_url='/api/plugins/netbox_netisp/customers/'
+        ),
+    )
+    
     class Meta:
         model = Account
         fields = ("primary_applicant",)
@@ -96,3 +107,48 @@ class TicketForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ("notes","priority")
+
+class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = WirelessTicket
+        exclude = ('status', 'type')
+        field_order = ['password']
+
+class WirelessTicketConfirmationForm(BootstrapMixin, forms.ModelForm):
+
+    service = forms.ModelChoiceField(queryset=Service.objects.all(),disabled=True)
+    date_closed = forms.DateTimeField(disabled=True)
+    priority = forms.CharField(disabled=True)
+    type = forms.CharField(disabled=True)
+    status = forms.CharField(disabled=True)
+    notes = forms.CharField(widget=forms.Textarea,disabled=True)
+    technician = forms.CharField(disabled=True)
+    rssi = forms.IntegerField(disabled=True)
+    local_noise_floor = forms.IntegerField(disabled=True)
+    survey_height = forms.IntegerField(disabled=True)
+    conclusion = forms.CharField(disabled=True)
+    cpe = forms.ModelChoiceField(queryset=Device.objects.all(),disabled=True)
+
+    class Meta:
+        model = WirelessTicket
+        exclude = ('',
+                   )
+class ServiceForm(BootstrapMixin, forms.ModelForm):
+    
+    billing_package = forms.ModelChoiceField(queryset=BillingPackage.objects.all())
+    account = forms.ModelChoiceField(queryset=Account.objects.all(), disabled = True)
+    status = forms.CharField(disabled = True)
+    
+    address = DynamicModelChoiceField(
+        queryset=Address.objects.all(),
+        required=True,
+        display_field='name',
+        widget=APISelect(
+            api_url='/api/plugins/netbox_netisp/addresses/'
+        ),
+    )
+    
+    
+    class Meta:
+        model = Service
+        fields = ("account", "status", "type", "billing_package", "address")

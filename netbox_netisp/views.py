@@ -1,10 +1,12 @@
+from datetime import date
+
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django_tables2 import LazyPaginator, RequestConfig, SingleTableView
 from django.shortcuts import redirect
 from django.utils import timezone
 from utilities.views import GetReturnURLMixin
-
+from django.urls import reverse
 
 from .netbox_netisp.views.generic import (
     ObjectListView,
@@ -12,9 +14,7 @@ from .netbox_netisp.views.generic import (
     ObjectView,
     ObjectDeleteView,
 )
-from .models import Customer, Address, BillingPackage, Account, Equipment, RadioAccessPoint, CustomerPremiseEquipment,\
-    AntennaProfile, Service, WirelessService, FiberService, Ticket
-
+from .models import *
 from django.views.generic.edit import CreateView, UpdateView
 from netbox.views import generic
 from . import tables
@@ -110,17 +110,26 @@ class AccountListView(ObjectListView, View):
 class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
-
+    def get(self, request, *args, **kwargs):
+        if "customer_pk" in kwargs:
+            account = Account()
+            customer = Customer.objects.get(pk=kwargs["customer_pk"])
+            account.primary_applicant = customer
+            account.save()
+            return redirect(account)
+        else:
+            return super().get(request, *args, **kwargs)
 
 class AccountView(ObjectView):
     queryset = Account.objects.all()
     template_plugin_prefix = 'netbox_netisp/account/'
-
+    selected_service = ''
+ 
     def set_template_name(self, detail_name):
         """generate_template_name(self, 'wireless_service_detail') => netbox_netisp/account/wireless_service_detail.html"""
         self.selected_service_template = "{0}/{1}.html".format(self.template_plugin_prefix, detail_name)
 
-    def pick_selected_service_table(self, selected_service_pk):
+    def pick_selected_service_table(self, selected_service_pk, status='Incomplete'):
 
         selected_service = None
         selected_service_template = None
@@ -131,10 +140,13 @@ class AccountView(ObjectView):
 
         selected_service_parent = Service.objects.get(pk=selected_service_pk)
         if selected_service_parent.type == 'WIRELESS':
-            self.selected_service = WirelessService.objects.get(pk=selected_service_pk)
+            self.selected_service = Service.objects.get(pk=selected_service_pk)
             self.set_template_name('wireless_service_detail')
-        else:
+        elif selected_service_parent.type == 'FIBER' and status=='Complete':
             selected_service = FiberService.objects.get(pk=selected_service_pk)
+        else:
+            self.set_template_name('service_detail_placeholder')
+            return
 
     def get(self, request, *args, **kwargs):
         # If the user selected a service row while already on the account page
@@ -144,20 +156,6 @@ class AccountView(ObjectView):
         #    and provide the correct service detail db to the template.
         #
         selected_service_pk = kwargs.pop('service_id', None)
-        action = kwargs.pop('action', None)
-
-        ####### Adding section to provide a more complete MVP for users #######
-        if action == 'add_service':
-            service_error = "ERROR: This feature has not yet been implemented"
-        else:
-            service_error = None
-
-        if action == 'place_hold' or action == 'disconnect':
-            service_detail_error = "ERROR: This feature has not yet been implemented"
-        else:
-            service_detail_error = None
-
-        ####### END MVP SECTION #######
 
         current_account = get_object_or_404(self.queryset, **kwargs)
         services = current_account.service_set.all()
@@ -167,13 +165,16 @@ class AccountView(ObjectView):
             self.pick_selected_service_table(selected_service_pk)
             service_table = tables.ServiceTable(services)
             RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
-            ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+            ticket_table = tables.WirelessTicketTable(self.selected_service.ticket_set.all())
 
         elif len(services) > 0:
             self.pick_selected_service_table(services.first().pk)
             service_table = tables.ServiceTable(services)
             RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
-            ticket_table = tables.TicketTable(self.selected_service.ticket_set.all())
+            
+            #When installing, the wireless/fiber service hasnt been created yet.
+            if self.selected_service != '':
+                ticket_table = tables.WirelessTicketTable(self.selected_service.ticket_set.all())
 
         else:
             self.pick_selected_service_table(None)
@@ -188,8 +189,6 @@ class AccountView(ObjectView):
                 "service_count": len(services),
                 **({ "selected_service": self.selected_service } if 'selected_service' in dir(self) else {} ),
                 "selected_service_template": self.selected_service_template,
-                **({ "service_error": service_error } if service_error else {}),
-                **({ "service_detail_error": service_detail_error } if service_detail_error else {}),
                 "ticket_table": ticket_table
 
             },
@@ -265,8 +264,7 @@ class TicketListView(ObjectListView, View):
     table = tables.TicketTable
 
 class TicketEditView(ObjectEditView, View):
-    queryset = Ticket.objects.all()
-    model_form = forms.TicketForm
+    queryset = Ticket.objects.select_subclasses()
 
     def alter_obj(self, obj, request, url_args, url_kwargs):
         if('service_id' in url_kwargs and 'ticket_type' in url_kwargs):
@@ -275,12 +273,91 @@ class TicketEditView(ObjectEditView, View):
 
         return obj
 
+
+    ####model_form needs dynamic ticket init###
+    ###current mode hardcoded
     def get(self, request, *args, **kwargs):
+        self.model_form = forms.WirelessInstallTicketForm
         return super().get(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.model_form = forms.WirelessInstallTicketForm
+        return super().post(request, *args,**kwargs)
 
 class TicketView(ObjectView):
     queryset = Ticket.objects.all()
 
 class TicketDeleteView(ObjectDeleteView):
     queryset = Ticket.objects.all()
+
+class WirelessTicketEditView(ObjectEditView, View):
+    queryset = WirelessTicket.objects.all()
+    model_form = forms.WirelessTicketForm
+    template_name = 'netbox_netisp/wirelessticket_edit.html'
+
+    def alter_obj(self, obj, request, url_args, url_kwargs):
+        if '_complete' in request.POST:
+            obj.status = 'Awaiting Confirmation'
+            obj.date_closed = date.today()
+        else:
+            pass
+        return obj
+
+class WirelessTicketView(ObjectView):
+    queryset = WirelessTicket.objects.all()
+
+class WirelessTicketListView(ObjectListView, View):
+    queryset = WirelessTicket.objects.filter(status='Active')
+    table = tables.WirelessTicketTable
+
+class WirelessTicketListConfirmationsView(ObjectListView, View):
+    queryset = WirelessTicket.objects.filter(status='Awaiting Confirmation')
+    table = tables.WirelessTicketConfirmationTable
+    template_name = 'netbox_netisp/wirelessticket/confirm_list.html'
+
+class WirelessTicketConfirmationView(ObjectEditView, View):
+    queryset = WirelessTicket.objects.all()
+    model_form = forms.WirelessTicketConfirmationForm
+    template_name = 'netbox_netisp/wirelessticket/confirm.html'
+
+    def post(self, request, *args, **kwargs):
+        current_ticket = get_object_or_404(self.queryset, **kwargs)
+        current_ticket.status = 'Complete'
+        current_ticket.save()
+        current_service = current_ticket.service
+        current_service.status = 'Active'
+        current_service.save()
+        return redirect(current_ticket)
+
+"""Services"""
+class ServiceListView(ObjectListView, View):
+    queryset = Service.objects.all()
+    table = tables.ServiceTable
+
+class ServiceEditView(ObjectEditView, View):
+    queryset = Service.objects.all()
+    model_form = forms.ServiceForm
+
+    def create_install_ticket(self, type):
+        if type == 'WIRELESS':
+            ticket = WirelessTicket()
+            ticket.priority = 'Normal'
+            ticket.type = 'Install'
+            ticket.status = 'Active'
+            ticket.service = self.new_obj
+            ticket.save()
+
+    def alter_obj(self, obj, request, url_args, url_kwargs):
+        obj.account = Account.objects.get(pk=url_kwargs['account_pk'])
+        obj.status = "WO Submitted"
+        return obj
+
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        self.create_install_ticket(type=request.POST.get('type'))
+        return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_pk'], self.new_obj.pk]))
+
+
+
+
+

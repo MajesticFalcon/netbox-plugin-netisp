@@ -2,9 +2,10 @@ from django.db import models
 from extras.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
-from dcim.models import Manufacturer, DeviceType, Interface
+from dcim.models import Manufacturer, DeviceType, Interface, Device
 from ipam.fields import IPAddressField
 from django.contrib.auth.models import User
+from model_utils.managers import InheritanceManager
 
 
 class Customer(ChangeLoggedModel):
@@ -39,8 +40,8 @@ class Address(ChangeLoggedModel):
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:address", args=[self.pk])
-
-    def __str__(self):
+    
+    def name(self):
         if self.street_ordinance:
             return "{0} {1}. {2} {3}".format(
                 self.street_number,
@@ -54,6 +55,9 @@ class Address(ChangeLoggedModel):
                 self.street_name.capitalize(),
                 self.street_suffix.capitalize(),
             )
+    
+    def __str__(self):
+        return self.name()
 
 
 class BillingPackage(ChangeLoggedModel):
@@ -137,8 +141,8 @@ class Service(ChangeLoggedModel):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
     address = models.ForeignKey(Address, on_delete=models.PROTECT)
     billing_package = models.ForeignKey(BillingPackage, on_delete=models.PROTECT)
-    cpe = models.ForeignKey(CustomerPremiseEquipment, on_delete=models.PROTECT)
-    #status = models.CharField(choices=SERVICE_STATUS_CHOICES, max_length=30)
+    cpe = models.ForeignKey(CustomerPremiseEquipment, on_delete=models.PROTECT, null=True)
+    status = models.CharField(choices=SERVICE_STATUS_CHOICES, max_length=30)
 
     def __str__(self):
         return "{0} - {1} - {2}".format(self.account.primary_applicant.name(), self.billing_package.name, self.address)
@@ -191,7 +195,14 @@ class Ticket(ChangeLoggedModel):
 
     TICKET_STATUS_CHOICES = (
         ("Active", "Active"),
+        ("Awaiting Confirmation", "Awaiting Confirmation"),
         ("Complete", "Complete")
+    )
+
+    TICKET_TECHNICIAN_CHOICES = (
+        ("Roger", "Roger Roger"),
+        ("Joe", "Joe Dirt"),
+        ("Tom", "Tom Riddle")
     )
 
     service = models.ForeignKey(Service, on_delete=models.PROTECT)
@@ -201,7 +212,23 @@ class Ticket(ChangeLoggedModel):
     type = models.CharField(choices=TICKET_TYPE_CHOICES, max_length=255)
     status = models.CharField(choices=TICKET_STATUS_CHOICES, max_length=255)
     notes = models.TextField(max_length=255)
+    technician = models.CharField(choices=TICKET_TECHNICIAN_CHOICES, max_length=255)
+    objects = InheritanceManager()
+
+
+class WirelessTicket(Ticket):
+    WIRELESS_TICKET_CONCLUSION_CHOICES = (
+        ("PASS", "PASS"),
+        ("FAIL", "FAIL"),
+        ("SPECIAL", "SPECIAL - SEE NOTES (PASS)"),
+        ("SPECIAL", "SPECIAL - SEE NOTES (FAIL)")
+    )
+    rssi = models.IntegerField(null=True)
+    local_noise_floor = models.IntegerField(null=True)
+    survey_height = models.IntegerField(null=True)
+    conclusion = models.CharField(choices=WIRELESS_TICKET_CONCLUSION_CHOICES,max_length=255,null=True)
+    cpe = models.ForeignKey(Device, on_delete=models.PROTECT, null=True)
 
     def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:ticket", args=[self.pk])
+        return reverse("plugins:netbox_netisp:wirelessticket", args=[self.pk])
 
