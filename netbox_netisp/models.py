@@ -1,5 +1,5 @@
 from django.db import models
-from extras.models import ChangeLoggedModel
+from netbox.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
 from dcim.models import Manufacturer, DeviceType, Interface, Device
