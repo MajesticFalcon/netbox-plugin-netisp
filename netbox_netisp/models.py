@@ -232,3 +232,8 @@ class WirelessTicket(Ticket):
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:wirelessticket", args=[self.pk])
 
+class Attachment(ChangeLoggedModel):
+    image = models.ImageField(upload_to='netbox_netisp/attachments/')
+    account = models.ForeignKey(Account, on_delete=models.PROTECT, null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT, null=True, blank=True)
+    service = models.ForeignKey(Service, on_delete=models.PROTECT, null=True, blank=True)

@@ -55,3 +55,7 @@ class WirelessTicketAdmin(admin.ModelAdmin):
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     exclude = ('',)
+
+@admin.register(Attachment)
+class ServiceAdmin(admin.ModelAdmin):
+    exclude = ('',)

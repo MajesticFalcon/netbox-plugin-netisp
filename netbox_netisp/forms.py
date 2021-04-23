@@ -112,7 +112,6 @@ class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = WirelessTicket
         exclude = ('status', 'type')
-        field_order = ['password']
 
 class WirelessTicketConfirmationForm(BootstrapMixin, forms.ModelForm):
 
