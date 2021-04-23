@@ -237,3 +237,6 @@ class Attachment(ChangeLoggedModel):
     account = models.ForeignKey(Account, on_delete=models.PROTECT, null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.PROTECT, null=True, blank=True)
     service = models.ForeignKey(Service, on_delete=models.PROTECT, null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:attachment", args=[self.pk])

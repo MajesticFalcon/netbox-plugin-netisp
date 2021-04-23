@@ -3,7 +3,6 @@ from django.urls import reverse
 from utilities.forms import BootstrapMixin, SlugField, DynamicModelChoiceField, APISelect
 
 from .models import *
-from .models import AntennaProfile
 
 from django.core.validators import RegexValidator
 
@@ -151,3 +150,8 @@ class ServiceForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Service
         fields = ("account", "status", "type", "billing_package", "address")
+
+class AttachmentForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = Attachment
+        exclude = ('',)

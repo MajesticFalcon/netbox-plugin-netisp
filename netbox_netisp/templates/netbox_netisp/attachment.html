@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load buttons %}
+{% load helpers %}
+{% load plugins %}
+{% load static %}
+{% load tz %}
+
+{% block header %}
+    <div class="row noprint">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'plugins:netbox_netisp:attachment_list' %}">Attachment List</a></li>
+
+                <li>{{ object.pk }}</li>
+            </ol>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block content %}
+{% include 'netbox_netisp/generic/navigation.html' %}
+
+<div class="row">
+
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Attachment</strong>
+            </div>
+            <table class="table table-hover panel-body attr-table">
+
+                {% if object.account %}
+                <tr>
+                    <td>Account</td>
+                    <td><a href="{% url 'plugins:netbox_netisp:account' object.account.pk %} ">{{ object.account }}</a></td>
+                </tr>
+                {% endif %}
+                {% if object.service %}
+                <tr>
+                    <td>Service</td>
+                    <td>${{ object.service }}</td>
+                </tr>
+                {% endif %}
+                {% if object.address %}
+                <tr>
+                    <td>Address</td>
+                    <td>{{ object.address }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="2">
+                        <img width="100%" src="{{ object.image.url }}"/>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+    {% include 'netbox_netisp/generic/created_updated.html' %}
+
+{% endblock %}
+
+

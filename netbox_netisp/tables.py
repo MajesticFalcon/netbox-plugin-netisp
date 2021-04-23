@@ -157,3 +157,10 @@ class WirelessTicketConfirmationTable(WirelessTicketTable):
     class Meta(BaseTable.Meta):
         model = WirelessTicket
         fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+
+class AttachmentTable(BaseTable):
+    pk = tables.LinkColumn()
+
+    class Meta(BaseTable.Meta):
+        model = Attachment
+        fields = ("pk", "image", "account", "service", "address")
