@@ -149,7 +149,7 @@ class WirelessTicketTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = WirelessTicket
-        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+        fields = ("pk", "type", "status", "service", "date_opened", "date_closed", "priority", "notes")
 
 class WirelessTicketConfirmationTable(WirelessTicketTable):
     pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_confirm', args=[A("pk")])

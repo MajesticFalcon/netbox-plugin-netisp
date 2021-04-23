@@ -189,7 +189,8 @@ class AccountView(ObjectView):
                 "service_count": len(services),
                 **({ "selected_service": self.selected_service } if 'selected_service' in dir(self) else {} ),
                 "selected_service_template": self.selected_service_template,
-                "ticket_table": ticket_table
+                "ticket_table": ticket_table,
+                "attachments": current_account.attachment_set.all()
 
             },
         )
