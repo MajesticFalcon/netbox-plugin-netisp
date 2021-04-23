@@ -358,7 +358,21 @@ class ServiceEditView(ObjectEditView, View):
         self.create_install_ticket(type=request.POST.get('type'))
         return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_pk'], self.new_obj.pk]))
 
+"""Attachments"""
 
+class AttachmentListView(ObjectListView, View):
+    queryset = Attachment.objects.all()
+    table = tables.AttachmentTable
 
+class AttachmentEditView(ObjectEditView, View):
+    queryset = Attachment.objects.all()
+    model_form = forms.AttachmentForm
 
+    def alter_obj(self, obj, request, url_args, url_kwargs):
+        if 'type' in url_kwargs:
+            if url_kwargs['type'] == 'account':
+                obj.account = Account.objects.get(pk=url_kwargs['id'])
+        return obj
 
+class AttachmentView(ObjectView):
+    queryset = Attachment.objects.all()
