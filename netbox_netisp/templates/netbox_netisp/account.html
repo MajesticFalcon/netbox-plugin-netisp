@@ -87,7 +87,7 @@
                 <table class="table table-hover panel-body attr-table table-condensed">
                     <tr>
                         <th>Actions</th>
-                        <td><a class="btn btn-primary" href="{% url 'plugins:netbox_netisp:ticket_add' service_id=selected_service.pk ticket_type='repair' %}">Repair</a></td>
+                        <td><a class="btn btn-primary" href="{% url 'plugins:netbox_netisp:service_workorder' account_id=object.pk service_id=selected_service.pk type='repair' %}">Repair</a></td>
                         <td><a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='place_hold' %}" class="btn btn-warning">Put on Hold</a></td>
                         <td><a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='disconnect' %}" class="btn btn-danger">Disconnect</a></td>
 

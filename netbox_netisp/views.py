@@ -77,6 +77,7 @@ class AddressView(ObjectView):
             },
         )
 
+
 class AddressDeleteView(ObjectDeleteView):
     queryset = Address.objects.all()
 
@@ -113,6 +114,7 @@ class AccountListView(ObjectListView, View):
 class AccountEditView(ObjectEditView, View):
     queryset = Account.objects.all()
     model_form = forms.AccountForm
+
     def get(self, request, *args, **kwargs):
         if "customer_pk" in kwargs:
             account = Account()
@@ -123,14 +125,16 @@ class AccountEditView(ObjectEditView, View):
         else:
             return super().get(request, *args, **kwargs)
 
+
 class AccountView(ObjectView):
     queryset = Account.objects.all()
     template_plugin_prefix = 'netbox_netisp/account/'
     selected_service = ''
- 
+
     def set_template_name(self, detail_name):
         """generate_template_name(self, 'wireless_service_detail') => netbox_netisp/account/wireless_service_detail.html"""
-        self.selected_service_template = "{0}/{1}.html".format(self.template_plugin_prefix, detail_name)
+        self.selected_service_template = "{0}/{1}.html".format(
+            self.template_plugin_prefix, detail_name)
 
     def pick_selected_service_table(self, selected_service_pk, status='Incomplete'):
 
@@ -145,7 +149,7 @@ class AccountView(ObjectView):
         if selected_service_parent.type == 'WIRELESS':
             self.selected_service = Service.objects.get(pk=selected_service_pk)
             self.set_template_name('wireless_service_detail')
-        elif selected_service_parent.type == 'FIBER' and status=='Complete':
+        elif selected_service_parent.type == 'FIBER' and status == 'Complete':
             selected_service = FiberService.objects.get(pk=selected_service_pk)
         else:
             self.set_template_name('service_detail_placeholder')
@@ -167,17 +171,21 @@ class AccountView(ObjectView):
         if selected_service_pk:
             self.pick_selected_service_table(selected_service_pk)
             service_table = tables.ServiceTable(services)
-            RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
-            ticket_table = tables.WirelessTicketTable(self.selected_service.ticket_set.all())
+            RequestConfig(request, paginate={
+                          "per_page": 2}).configure(service_table)
+            ticket_table = tables.WirelessTicketTable(
+                self.selected_service.ticket_set.all())
 
         elif len(services) > 0:
             self.pick_selected_service_table(services.first().pk)
             service_table = tables.ServiceTable(services)
-            RequestConfig(request, paginate={"per_page": 2}).configure(service_table)
-            
-            #When installing, the wireless/fiber service hasnt been created yet.
+            RequestConfig(request, paginate={
+                          "per_page": 2}).configure(service_table)
+
+            # When installing, the wireless/fiber service hasnt been created yet.
             if self.selected_service != '':
-                ticket_table = tables.WirelessTicketTable(self.selected_service.ticket_set.all())
+                ticket_table = tables.WirelessTicketTable(
+                    self.selected_service.ticket_set.all())
 
         else:
             self.pick_selected_service_table(None)
@@ -188,9 +196,9 @@ class AccountView(ObjectView):
             self.get_template_name(),
             {
                 "object": current_account,
-                **({ "service_table": service_table } if service_table else {} ),
+                **({"service_table": service_table} if service_table else {}),
                 "service_count": len(services),
-                **({ "selected_service": self.selected_service } if 'selected_service' in dir(self) else {} ),
+                **({"selected_service": self.selected_service} if 'selected_service' in dir(self) else {}),
                 "selected_service_template": self.selected_service_template,
                 "ticket_table": ticket_table,
                 "attachments": current_account.attachment_set.all()
@@ -225,47 +233,65 @@ class EquipmentDeleteView(ObjectDeleteView):
     queryset = Equipment.objects.all()
     selected_service = {}
 
+
 """Radio Access Point"""
+
+
 class RadioAccessPointListView(ObjectListView, View):
     queryset = RadioAccessPoint.objects.all()
     table = tables.RadioAccessPointTable
+
 
 class RadioAccessPointEditView(ObjectEditView, View):
     queryset = RadioAccessPoint.objects.all()
     model_form = forms.RadioAccessPointForm
 
+
 class RadioAccessPointView(ObjectView):
     queryset = RadioAccessPoint.objects.all()
 
+
 """Antenna Profile"""
+
+
 class AntennaProfileListView(ObjectListView, View):
     queryset = AntennaProfile.objects.all()
     table = tables.AntennaProfileTable
+
 
 class AntennaProfileEditView(ObjectEditView, View):
     queryset = AntennaProfile.objects.all()
     model_form = forms.AntennaProfileForm
 
+
 class AntennaProfileView(ObjectView):
     queryset = AntennaProfile.objects.all()
 
+
 """Customer Premise Equipment"""
+
+
 class CustomerPremiseEquipmentListView(ObjectListView, View):
     queryset = CustomerPremiseEquipment.objects.all()
     table = tables.CustomerPremiseEquipmentTable
+
 
 class CustomerPremiseEquipmentEditView(ObjectEditView, View):
     queryset = CustomerPremiseEquipment.objects.all()
     model_form = forms.CustomerPremiseEquipmentForm
 
+
 class CustomerPremiseEquipmentView(ObjectView):
     queryset = CustomerPremiseEquipment.objects.all()
 
+
 """Tickets"""
+
 
 class TicketListView(ObjectListView, View):
     queryset = Ticket.objects.all()
     table = tables.TicketTable
+
 
 class TicketEditView(ObjectEditView, View):
     queryset = Ticket.objects.select_subclasses()
@@ -277,22 +303,25 @@ class TicketEditView(ObjectEditView, View):
 
         return obj
 
-
     ####model_form needs dynamic ticket init###
-    ###current mode hardcoded
+    # current mode hardcoded
+
     def get(self, request, *args, **kwargs):
         self.model_form = forms.WirelessInstallTicketForm
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.model_form = forms.WirelessInstallTicketForm
-        return super().post(request, *args,**kwargs)
+        return super().post(request, *args, **kwargs)
+
 
 class TicketView(ObjectView):
     queryset = Ticket.objects.all()
 
+
 class TicketDeleteView(ObjectDeleteView):
     queryset = Ticket.objects.all()
+
 
 class WirelessTicketEditView(ObjectEditView, View):
     queryset = WirelessTicket.objects.all()
@@ -307,17 +336,21 @@ class WirelessTicketEditView(ObjectEditView, View):
             pass
         return obj
 
+
 class WirelessTicketView(ObjectView):
     queryset = WirelessTicket.objects.all()
+
 
 class WirelessTicketListView(ObjectListView, View):
     queryset = WirelessTicket.objects.filter(status='Active')
     table = tables.WirelessTicketTable
 
+
 class WirelessTicketListConfirmationsView(ObjectListView, View):
     queryset = WirelessTicket.objects.filter(status='Awaiting Confirmation')
     table = tables.WirelessTicketConfirmationTable
     template_name = 'netbox_netisp/wirelessticket/confirm_list.html'
+
 
 class WirelessTicketConfirmationView(ObjectEditView, View):
     queryset = WirelessTicket.objects.all()
@@ -333,10 +366,14 @@ class WirelessTicketConfirmationView(ObjectEditView, View):
         current_service.save()
         return redirect(current_ticket)
 
+
 """Services"""
+
+
 class ServiceListView(ObjectListView, View):
     queryset = Service.objects.all()
     table = tables.ServiceTable
+
 
 class ServiceEditView(ObjectEditView, View):
     queryset = Service.objects.all()
@@ -361,11 +398,55 @@ class ServiceEditView(ObjectEditView, View):
         self.create_install_ticket(type=request.POST.get('type'))
         return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_pk'], self.new_obj.pk]))
 
+
+class ServiceWorkOrderView(ObjectEditView, View):
+    queryset = Service.objects.all()
+    model_form = forms.WorkOrderForm
+
+    def create_install_ticket(self):
+        ticket = WirelessTicket()
+        ticket.priority = 'Normal'
+        ticket.type = 'Install'
+        ticket.status = 'Active'
+        return ticket
+
+    def create_repair_ticket(self):
+        ticket = WirelessTicket()
+        ticket.priority = 'Normal'
+        ticket.type = 'Repair'
+        ticket.status = 'Active'
+        return ticket
+
+    def create_disconnect_ticket(self):
+        ticket = WirelessTicket()
+        ticket.priority = 'Normal'
+        ticket.type = 'Disconnect'
+        ticket.status = 'Active'
+        return ticket
+
+    def post(self, request, *args, **kwargs):
+        print('before')
+        #super().post(request, *args, **kwargs)
+        print('after')
+        type = kwargs['type']
+        if (type == 'install'):
+            ticket = self.create_install_ticket()
+        elif (type == 'repair'):
+            ticket = self.create_repair_ticket()
+        elif (type == 'disconnect'):
+            ticket = self.create_disconnect_ticket()
+        ticket.service_id = kwargs['service_id']
+        ticket.save()
+        return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_id'], kwargs['service_id']]))
+
+
 """Attachments"""
+
 
 class AttachmentListView(ObjectListView, View):
     queryset = Attachment.objects.all()
     table = tables.AttachmentTable
+
 
 class AttachmentEditView(ObjectEditView, View):
     queryset = Attachment.objects.all()
@@ -377,17 +458,23 @@ class AttachmentEditView(ObjectEditView, View):
                 obj.account = Account.objects.get(pk=url_kwargs['id'])
         return obj
 
+
 class AttachmentView(ObjectView):
     queryset = Attachment.objects.all()
 
+
 """OLT"""
+
+
 class OLTListView(ObjectListView, View):
     queryset = OLT.objects.all()
     table = tables.OLTTable
 
+
 class OLTEditView(ObjectEditView, View):
     queryset = OLT.objects.all()
     model_form = forms.OLTForm
+
 
 class OLTView(ObjectView):
     queryset = OLT.objects.all()
@@ -396,15 +483,15 @@ class OLTView(ObjectView):
         current_olt = get_object_or_404(self.queryset, **kwargs)
         splitters = GPONSplitter.objects.filter(object_id=current_olt.pk)
         splitter_table = tables.GPONSplitterTable(splitters)
-        RequestConfig(request, paginate={"per_page": 5}).configure(splitter_table)
+        RequestConfig(request, paginate={"per_page": 5}).configure(
+            splitter_table)
 
-        #outer_list=splitters
-        #inner_list=nids
-        #return a list of nids whose FK corresponds to one of the splitters linked to this OLT
+        # outer_list=splitters
+        # inner_list=nids
+        # return a list of nids whose FK corresponds to one of the splitters linked to this OLT
         onts = [nid for splitter in splitters for nid in splitter.ont_set.all()]
         ont_table = tables.ONTTable(onts)
         RequestConfig(request, paginate={"per_page": 25}).configure(ont_table)
-
 
         return render(
             request,
@@ -418,7 +505,3 @@ class OLTView(ObjectView):
 
             },
         )
-
-
-
-
