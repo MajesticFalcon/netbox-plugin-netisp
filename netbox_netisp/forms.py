@@ -6,6 +6,10 @@ from .models import *
 
 from django.core.validators import RegexValidator
 
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
+
+
 class CustomerForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Customer
@@ -154,4 +158,9 @@ class ServiceForm(BootstrapMixin, forms.ModelForm):
 class AttachmentForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Attachment
+        exclude = ('',)
+
+class OLTForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = OLT
         exclude = ('',)

@@ -8,6 +8,9 @@ from django.utils import timezone
 from utilities.views import GetReturnURLMixin
 from django.urls import reverse
 
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
+
 from .netbox_netisp.views.generic import (
     ObjectListView,
     ObjectEditView,
@@ -376,3 +379,46 @@ class AttachmentEditView(ObjectEditView, View):
 
 class AttachmentView(ObjectView):
     queryset = Attachment.objects.all()
+
+"""OLT"""
+class OLTListView(ObjectListView, View):
+    queryset = OLT.objects.all()
+    table = tables.OLTTable
+
+class OLTEditView(ObjectEditView, View):
+    queryset = OLT.objects.all()
+    model_form = forms.OLTForm
+
+class OLTView(ObjectView):
+    queryset = OLT.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        current_olt = get_object_or_404(self.queryset, **kwargs)
+        splitters = GPONSplitter.objects.filter(object_id=current_olt.pk)
+        splitter_table = tables.GPONSplitterTable(splitters)
+        RequestConfig(request, paginate={"per_page": 5}).configure(splitter_table)
+
+        #outer_list=splitters
+        #inner_list=nids
+        #return a list of nids whose FK corresponds to one of the splitters linked to this OLT
+        onts = [nid for splitter in splitters for nid in splitter.ont_set.all()]
+        ont_table = tables.ONTTable(onts)
+        RequestConfig(request, paginate={"per_page": 25}).configure(ont_table)
+
+
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": current_olt,
+                "splitter_table": splitter_table,
+                "splitter_count": len(splitters),
+                "ont_table": ont_table,
+                "ont_count": len(onts),
+
+            },
+        )
+
+
+
+
