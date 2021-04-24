@@ -123,14 +123,16 @@ class Attachment(ChangeLoggedModel):
     def get_absolute_url(self):
         return reverse("plugins:netbox_netisp:attachment", args=[self.pk])
 
-class ISPActiveDevice(ChangeLoggedModel):
+class ISPDevice(ChangeLoggedModel):
     name = models.CharField(max_length=255)
     comments = models.TextField(null=True, blank=True)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
     device_type = models.ForeignKey(DeviceType, on_delete=models.PROTECT)
     site = models.ForeignKey(Site, on_delete=models.PROTECT)
-    ip_address = IPAddressField(blank=True, null=True, default="")
     uuid = models.CharField(max_length=255)
+
+class ISPActiveDevice(ISPDevice):
+    ip_address = IPAddressField(blank=True, null=True, default="")
     type = models.CharField(max_length=255, null=True, blank=True)
 
 class OLT(ISPActiveDevice):
@@ -138,18 +140,24 @@ class OLT(ISPActiveDevice):
         return reverse("plugins:netbox_netisp:olt", args=[self.pk])
     pass
 
-class GPONSplitter(ChangeLoggedModel):
-    name = models.CharField(max_length=255)
+class GPONSplitter(ISPDevice):
     uplink_type = models.CharField(max_length=255)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     uplink_port = GenericForeignKey('content_type', 'object_id')
 
     def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:olt", args=[self.pk])
+        return reverse("plugins:netbox_netisp:gponsplitter", args=[self.pk])
 
     def __str__(self):
         return self.name
+
+    def parent(self):
+        if self.content_type.model == 'olt':
+            return OLT.objects.get(pk=self.object_id).name
+        else:
+            return GPONSplitter.objecst.get(pk=self.object_id).name
+
 class ONT(ISPActiveDevice):
     uplink = models.ForeignKey(GPONSplitter, on_delete=models.PROTECT)
 

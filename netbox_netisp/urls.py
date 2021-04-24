@@ -82,5 +82,11 @@ urlpatterns = [
     path("olts/", OLTListView.as_view(), name="olt_list"),
     path("olt/add", OLTEditView.as_view(), name="olt_add"),
     path("olt/<int:pk>", OLTView.as_view(), name="olt"),
+
+    path("gponsplitters/", GPONSplitterListView.as_view(), name="gponsplitter_list"),
+    path("gponsplitter/add", GPONSplitterEditView.as_view(), name="gponsplitter_add"),
+    path("gponsplitter/<int:pk>/edit/", GPONSplitterEditView.as_view(), name="gponsplitter_edit"),
+    path("gponsplitter/<int:pk>/", GPONSplitterView.as_view(), name="gponsplitter"),
+
 ]
 
