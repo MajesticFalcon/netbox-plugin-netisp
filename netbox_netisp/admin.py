@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import *
-
-
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
 
 
 @admin.register(Account)
@@ -59,3 +59,16 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(Attachment)
 class ServiceAdmin(admin.ModelAdmin):
     exclude = ('',)
+
+@admin.register(OLT)
+class OLTAdmin(admin.ModelAdmin):
+    exclude = ('',)
+
+@admin.register(GPONSplitter)
+class GPONSplitterAdmin(admin.ModelAdmin):
+    exclude = ('',)
+
+@admin.register(ONT)
+class ONTAdmin(admin.ModelAdmin):
+    exclude = ('',)
+
