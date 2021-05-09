@@ -306,6 +306,7 @@ class HomeView(View):
         cpes = CustomerPremiseEquipment.objects.all()
         customers = Customer.objects.all()
         wirelesstickets = WirelessTicket.objects.all()
+        wirelessticket_confirmations = WirelessTicket.objects.filter(status='Awaiting Confirmation')
 
 
         return render(request, self.template_name, {
@@ -317,5 +318,6 @@ class HomeView(View):
             "antenna_count": len(antennas),
             "cpe_count": len(cpes),
             "customer_count": len(customers),
+            "wirelessticket_confirmation_count": len(wirelessticket_confirmations),
             "wirelessticket_count": len(wirelesstickets)
         })

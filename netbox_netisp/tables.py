@@ -138,18 +138,17 @@ class WirelessServiceDetailTable(ServiceDetailTable):
 class TicketTable(BaseTable):
     type = tables.Column(verbose_name="Ticket Type")
     class Meta(BaseTable.Meta):
-        model = Ticket
-        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+        model = WirelessTicket
+        fields = ("pk", "type", "status", "date_opened", "date_closed", "priority", "notes")
 
 class WirelessTicketTable(BaseTable):
 
     pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_edit', args=[A("pk")])
 
-    type = tables.Column(verbose_name="Ticket Type")
 
     class Meta(BaseTable.Meta):
         model = WirelessTicket
-        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+        fields = ("pk", "type", "status", "date_opened", "date_closed", "priority", "notes")
 
 class WirelessTicketConfirmationTable(WirelessTicketTable):
     pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_confirm', args=[A("pk")])

@@ -299,9 +299,20 @@ class WirelessTicketEditView(ObjectEditView, View):
         if '_complete' in request.POST:
             obj.status = 'Awaiting Confirmation'
             obj.date_closed = date.today()
+            print(obj.date_closed)
+
         else:
             pass
         return obj
+
+    def get(self, request, *args, **kwargs):
+        current_ticket = get_object_or_404(self.queryset, **kwargs)
+        if current_ticket.status == 'Complete':
+            return redirect(current_ticket)
+        elif current_ticket.status == 'Awaiting Confirmation':
+            return redirect(current_ticket)
+        else:
+            return super().get(request, *args, **kwargs)
 
 class WirelessTicketView(ObjectView):
     queryset = WirelessTicket.objects.all()
