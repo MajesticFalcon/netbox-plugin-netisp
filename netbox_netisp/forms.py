@@ -114,13 +114,13 @@ class TicketForm(BootstrapMixin, forms.ModelForm):
 class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = WirelessTicket
-        exclude = ('status', 'type')
+        exclude = ('status', 'type','date_closed')
 
 class WirelessTicketConfirmationForm(BootstrapMixin, forms.ModelForm):
 
     service = forms.ModelChoiceField(queryset=Service.objects.all(),disabled=True)
-    date_closed = forms.DateTimeField(disabled=True)
     priority = forms.CharField(disabled=True)
+    date_closed = forms.DateField(disabled=True)
     type = forms.CharField(disabled=True)
     status = forms.CharField(disabled=True)
     notes = forms.CharField(widget=forms.Textarea,disabled=True)

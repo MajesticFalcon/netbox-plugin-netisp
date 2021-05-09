@@ -308,6 +308,7 @@ class HomeView(View):
         cpes = CustomerPremiseEquipment.objects.all()
         customers = Customer.objects.all()
         wirelesstickets = WirelessTicket.objects.all()
+        wirelessticket_confirmations = WirelessTicket.objects.filter(status='Awaiting Confirmation')
         olts = OLT.objects.all()
         splitters = GPONSplitter.objects.all()
         onts = ONT.objects.all()
@@ -321,7 +322,8 @@ class HomeView(View):
             "antenna_count": len(antennas),
             "cpe_count": len(cpes),
             "customer_count": len(customers),
-            "wirelessticket_count": len(wirelesstickets),
+            "wirelessticket_confirmation_count": len(wirelessticket_confirmations),
+            "wirelessticket_count": len(wirelesstickets)
             "olt_count": len(olts),
             "splitter_count": len(splitters),
             "ont_count": len(onts),
