@@ -3,9 +3,12 @@ from django.urls import reverse
 from utilities.forms import BootstrapMixin, SlugField, DynamicModelChoiceField, APISelect
 
 from .models import *
-from .models import AntennaProfile
 
 from django.core.validators import RegexValidator
+
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
+
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -113,7 +116,6 @@ class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
         model = WirelessTicket
         exclude = ('status', 'type','date_closed')
 
-
 class WirelessTicketConfirmationForm(BootstrapMixin, forms.ModelForm):
 
     service = forms.ModelChoiceField(queryset=Service.objects.all(),disabled=True)
@@ -152,3 +154,13 @@ class ServiceForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Service
         fields = ("account", "status", "type", "billing_package", "address")
+
+class AttachmentForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = Attachment
+        exclude = ('',)
+
+class OLTForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = OLT
+        exclude = ('',)

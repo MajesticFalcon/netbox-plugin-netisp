@@ -20,6 +20,8 @@ from django.contrib import messages
 import logging
 
 from netbox_netisp.models import *
+from netbox_netisp.netbox_netisp.models.wireless.models import *
+from netbox_netisp.netbox_netisp.models.crm.models import *
 
 
 class ObjectListView(View):
@@ -307,7 +309,9 @@ class HomeView(View):
         customers = Customer.objects.all()
         wirelesstickets = WirelessTicket.objects.all()
         wirelessticket_confirmations = WirelessTicket.objects.filter(status='Awaiting Confirmation')
-
+        olts = OLT.objects.all()
+        splitters = GPONSplitter.objects.all()
+        onts = ONT.objects.all()
 
         return render(request, self.template_name, {
             "service_count": len(services),
@@ -320,4 +324,7 @@ class HomeView(View):
             "customer_count": len(customers),
             "wirelessticket_confirmation_count": len(wirelessticket_confirmations),
             "wirelessticket_count": len(wirelesstickets)
+            "olt_count": len(olts),
+            "splitter_count": len(splitters),
+            "ont_count": len(onts),
         })

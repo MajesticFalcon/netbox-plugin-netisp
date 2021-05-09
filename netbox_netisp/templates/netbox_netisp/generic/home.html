@@ -91,5 +91,33 @@
 
         </div>
     </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Fiber</strong>
+            </div>
+            <div class="list-group">
+
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">
+                        <span class="badge pull-right">{{ olt_count }}</span>
+                        <h4 class="list-group-item-heading"><a href="{% url 'plugins:netbox_netisp:olt_list' %}">GPON OLTs</a></h4>
+                        <p class="list-group-item-text text-muted">Devices that terminate aggregated GPON services</p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">{{ splitter_count }}</span>
+                        <h4 class="list-group-item-heading"><a href="#">GPON Splitters</a></h4>
+                        <p class="list-group-item-text text-muted">Devices that distribute optical light across many ports</p>
+                </div>
+                <div class="list-group-item">
+                        <span class="badge pull-right">{{ ont_count }}</span>
+                        <h4 class="list-group-item-heading"><a href="#">GPON ONTs</a></h4>
+                        <p class="list-group-item-text text-muted">Devices that terminate a GPON service</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 {% endblock %}

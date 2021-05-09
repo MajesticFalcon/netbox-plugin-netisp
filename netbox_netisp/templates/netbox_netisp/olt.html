@@ -4,20 +4,21 @@
 {% load plugins %}
 {% load static %}
 {% load tz %}
+{% load render_table from django_tables2 %}
 
 {% block header %}
     <div class="row noprint">
         <div class="col-sm-8 col-md-9">
             <ol class="breadcrumb">
-                <li><a href="{% url 'plugins:netbox_netisp:radioaccesspoint_list' %}">Radio Access Points</a></li>
+                <li><a href="{% url 'plugins:netbox_netisp:olt_list' %}">OLTs</a></li>
 
                 <li>{{ object.name }}</li>
             </ol>
         </div>
         <div class="col-sm-4 col-md-3">
-            <form action="{% url 'plugins:netbox_netisp:radioaccesspoint_list' %}" method="get">
+            <form action="{% url 'plugins:netbox_netisp:olt_list' %}" method="get">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search radio access points" />
+                    <input type="text" name="q" class="form-control" placeholder="Search OLTs" />
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary">
                             <span class="mdi mdi-magnify" aria-hidden="true"></span>
@@ -34,20 +35,20 @@
 {% include 'netbox_netisp/generic/navigation.html' %}
 
 <div class="row">
-    <a class="btn btn-info btn-sm" href=" {% url 'plugins:netbox_netisp:radioaccesspoint_list' %}">Radio Access Point List</a>
-    <a class="btn btn-warning btn-sm" href=" {% url 'plugins:netbox_netisp:radioaccesspoint_edit' pk=object.pk %}">Edit</a>
-    <a class="btn btn-danger btn-sm" href=" {% url 'plugins:netbox_netisp:radioaccesspoint_edit' pk=object.pk %}">Delete</a>
 
-
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6 col-md-offset-1">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <strong>Radio Access Point</strong>
+                <strong>Optical Line Terminator ( OLT )</strong>
             </div>
             <table class="table table-hover panel-body attr-table">
                 <tr>
                     <td>Name</td>
                     <td>{{ object.name }}</td>
+                </tr>
+                <tr>
+                    <td>Comments</td>
+                    <td>${{ object.comments }}</td>
                 </tr>
                 <tr>
                     <td>Manufacturer</td>
@@ -58,18 +59,45 @@
                     <td>{{ object.device_type }}</td>
                 </tr>
                 <tr>
-                    <td>Antenna</td>
-                    <td>{{ object.antenna }}</td>
+                    <td>Site</td>
+                    <td>{{ object.site }}</td>
                 </tr>
                 <tr>
-                    <td>Frequency</td>
-                    <td>{{ object.frequency }}</td>
+                    <td>IP</td>
+                    <td>{{ object.ip_address }}</td>
                 </tr>
             </table>
         </div>
     </div>
+    <div class="col-md-4">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Downstream Splitters ( {{ splitter_count }} )</strong>
+            </div>
+            {% if splitter_table %}
+                {% render_table splitter_table %}
+            {% endif %}
+        </div>
+    </div>
 </div>
 
+<div class="row">
+
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Downstream ONTs ( {{ ont_count }} )</strong>
+            </div>
+            {% if ont_table %}
+                {% render_table ont_table %}
+            {% endif %}
+
+        </div>
+    </div>
+</div>
     {% include 'netbox_netisp/generic/created_updated.html' %}
 
 {% endblock %}

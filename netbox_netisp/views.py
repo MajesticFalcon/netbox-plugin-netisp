@@ -8,6 +8,9 @@ from django.utils import timezone
 from utilities.views import GetReturnURLMixin
 from django.urls import reverse
 
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
+
 from .netbox_netisp.views.generic import (
     ObjectListView,
     ObjectEditView,
@@ -189,7 +192,8 @@ class AccountView(ObjectView):
                 "service_count": len(services),
                 **({ "selected_service": self.selected_service } if 'selected_service' in dir(self) else {} ),
                 "selected_service_template": self.selected_service_template,
-                "ticket_table": ticket_table
+                "ticket_table": ticket_table,
+                "attachments": current_account.attachment_set.all()
 
             },
         )
@@ -368,6 +372,63 @@ class ServiceEditView(ObjectEditView, View):
         self.create_install_ticket(type=request.POST.get('type'))
         return redirect(reverse('plugins:netbox_netisp:account_selected', args=[kwargs['account_pk'], self.new_obj.pk]))
 
+"""Attachments"""
+
+class AttachmentListView(ObjectListView, View):
+    queryset = Attachment.objects.all()
+    table = tables.AttachmentTable
+
+class AttachmentEditView(ObjectEditView, View):
+    queryset = Attachment.objects.all()
+    model_form = forms.AttachmentForm
+
+    def alter_obj(self, obj, request, url_args, url_kwargs):
+        if 'type' in url_kwargs:
+            if url_kwargs['type'] == 'account':
+                obj.account = Account.objects.get(pk=url_kwargs['id'])
+        return obj
+
+class AttachmentView(ObjectView):
+    queryset = Attachment.objects.all()
+
+"""OLT"""
+class OLTListView(ObjectListView, View):
+    queryset = OLT.objects.all()
+    table = tables.OLTTable
+
+class OLTEditView(ObjectEditView, View):
+    queryset = OLT.objects.all()
+    model_form = forms.OLTForm
+
+class OLTView(ObjectView):
+    queryset = OLT.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        current_olt = get_object_or_404(self.queryset, **kwargs)
+        splitters = GPONSplitter.objects.filter(object_id=current_olt.pk)
+        splitter_table = tables.GPONSplitterTable(splitters)
+        RequestConfig(request, paginate={"per_page": 5}).configure(splitter_table)
+
+        #outer_list=splitters
+        #inner_list=nids
+        #return a list of nids whose FK corresponds to one of the splitters linked to this OLT
+        onts = [nid for splitter in splitters for nid in splitter.ont_set.all()]
+        ont_table = tables.ONTTable(onts)
+        RequestConfig(request, paginate={"per_page": 25}).configure(ont_table)
+
+
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": current_olt,
+                "splitter_table": splitter_table,
+                "splitter_count": len(splitters),
+                "ont_table": ont_table,
+                "ont_count": len(onts),
+
+            },
+        )
 
 
 

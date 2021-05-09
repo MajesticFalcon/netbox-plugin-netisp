@@ -74,5 +74,13 @@ urlpatterns = [
     path("service/", ServiceListView.as_view(), name="service_list"),
     path("service/add/<int:account_pk>", ServiceEditView.as_view(), name="service_add"),
 
+    path("attachments/", AttachmentListView.as_view(), name="attachment_list"),
+    path("attachment/add/<str:type>/<int:id>/", AttachmentEditView.as_view(), name="attachment_add"),
+    path("attachment/add", AttachmentEditView.as_view(), name="attachment_add"),
+    path("attachment/<int:pk>", AttachmentView.as_view(), name="attachment"),
+
+    path("olts/", OLTListView.as_view(), name="olt_list"),
+    path("olt/add", OLTEditView.as_view(), name="olt_add"),
+    path("olt/<int:pk>", OLTView.as_view(), name="olt"),
 ]
 
