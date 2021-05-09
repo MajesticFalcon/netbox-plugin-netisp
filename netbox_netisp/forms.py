@@ -3,9 +3,12 @@ from django.urls import reverse
 from utilities.forms import BootstrapMixin, SlugField, DynamicModelChoiceField, APISelect
 
 from .models import *
-from .models import AntennaProfile
 
 from django.core.validators import RegexValidator
+
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
+
 
 class CustomerForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -111,14 +114,13 @@ class TicketForm(BootstrapMixin, forms.ModelForm):
 class WirelessTicketForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = WirelessTicket
-        exclude = ('status', 'type')
-        field_order = ['password']
+        exclude = ('status', 'type','date_closed')
 
 class WirelessTicketConfirmationForm(BootstrapMixin, forms.ModelForm):
 
     service = forms.ModelChoiceField(queryset=Service.objects.all(),disabled=True)
-    date_closed = forms.DateTimeField(disabled=True)
     priority = forms.CharField(disabled=True)
+    date_closed = forms.DateField(disabled=True)
     type = forms.CharField(disabled=True)
     status = forms.CharField(disabled=True)
     notes = forms.CharField(widget=forms.Textarea,disabled=True)
@@ -152,3 +154,13 @@ class ServiceForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Service
         fields = ("account", "status", "type", "billing_package", "address")
+
+class AttachmentForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = Attachment
+        exclude = ('',)
+
+class OLTForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = OLT
+        exclude = ('',)

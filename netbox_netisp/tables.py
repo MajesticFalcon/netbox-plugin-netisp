@@ -6,6 +6,7 @@ from django_tables2.utils import A  # alias for Accessor
 
 from .models import *
 
+
 from utilities.tables import (
     BaseTable,
     ButtonsColumn,
@@ -13,6 +14,9 @@ from utilities.tables import (
     TagColumn,
     ToggleColumn
 )
+
+from .netbox_netisp.models.wireless.models import *
+from .netbox_netisp.models.crm.models import *
 
 
 
@@ -138,18 +142,18 @@ class WirelessServiceDetailTable(ServiceDetailTable):
 class TicketTable(BaseTable):
     type = tables.Column(verbose_name="Ticket Type")
     class Meta(BaseTable.Meta):
-        model = Ticket
-        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+        model = WirelessTicket
+        fields = ("pk", "type", "status", "date_opened", "date_closed", "priority", "notes")
 
 class WirelessTicketTable(BaseTable):
 
     pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_edit', args=[A("pk")])
 
-    type = tables.Column(verbose_name="Ticket Type")
 
     class Meta(BaseTable.Meta):
         model = WirelessTicket
-        fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+        fields = ("pk", "type", "status", "date_opened", "date_closed", "priority", "notes")
+
 
 class WirelessTicketConfirmationTable(WirelessTicketTable):
     pk = tables.LinkColumn('plugins:netbox_netisp:wirelessticket_confirm', args=[A("pk")])
@@ -157,3 +161,31 @@ class WirelessTicketConfirmationTable(WirelessTicketTable):
     class Meta(BaseTable.Meta):
         model = WirelessTicket
         fields = ("pk", "type", "service", "date_opened", "date_closed", "priority", "notes")
+
+class AttachmentTable(BaseTable):
+    pk = tables.LinkColumn()
+
+    class Meta(BaseTable.Meta):
+        model = Attachment
+        fields = ("pk", "image", "account", "service", "address")
+
+class OLTTable(BaseTable):
+    pk = tables.LinkColumn()
+
+    class Meta(BaseTable.Meta):
+        model = OLT
+        fields = ("pk", "name")
+
+class GPONSplitterTable(BaseTable):
+    pk = tables.LinkColumn()
+    uplink_type = tables.Column(verbose_name="Splitter Type")
+    class Meta(BaseTable.Meta):
+        model = GPONSplitter
+        fields = ("pk", "name", "uplink_type")
+
+class ONTTable(BaseTable):
+    pk = tables.LinkColumn()
+
+    class Meta(BaseTable.Meta):
+        model = ONT
+        fields = ("pk", "name", "uplink")

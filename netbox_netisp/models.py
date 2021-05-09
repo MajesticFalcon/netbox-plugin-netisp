@@ -1,89 +1,15 @@
 from django.db import models
-from extras.models import ChangeLoggedModel
+from netbox.models import ChangeLoggedModel
 from datetime import datetime
 from django.urls import reverse
-from dcim.models import Manufacturer, DeviceType, Interface, Device
-from ipam.fields import IPAddressField
+from dcim.models import Manufacturer, DeviceType, Interface, Device, Site
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
+from ipam.fields import IPAddressField
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from netbox_netisp.netbox_netisp.models.crm.models import *
 
-
-class Customer(ChangeLoggedModel):
-    first_name = models.CharField(max_length=255)
-    middle_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    birthdate = models.DateTimeField(blank=True, null=True)
-    email = models.EmailField(max_length=255, blank=True, null=True)
-    phone_number = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return self.name()
-
-    def name(self):
-        return "{0} {1} {2}".format(self.first_name, self.middle_name, self.last_name)
-
-    def age(self):
-        return datetime.now().year - self.birthdate.year
-
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:customer", args=[self.pk])
-
-
-class Address(ChangeLoggedModel):
-    street_number = models.IntegerField()
-    street_ordinance = models.CharField(max_length=1)
-    street_name = models.CharField(max_length=255)
-    street_suffix = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    state_code = models.CharField(max_length=2)
-    zip = models.CharField(max_length=10)
-
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:address", args=[self.pk])
-    
-    def name(self):
-        if self.street_ordinance:
-            return "{0} {1}. {2} {3}".format(
-                self.street_number,
-                self.street_ordinance.capitalize(),
-                self.street_name.capitalize(),
-                self.street_suffix.capitalize(),
-            )
-        else:
-            return "{0} {1} {2}".format(
-                self.street_number,
-                self.street_name.capitalize(),
-                self.street_suffix.capitalize(),
-            )
-    
-    def __str__(self):
-        return self.name()
-
-
-class BillingPackage(ChangeLoggedModel):
-    name = models.CharField(max_length=255)
-    price = models.IntegerField()
-    download_speed = models.IntegerField()
-    upload_speed = models.IntegerField()
-    data_cap = models.IntegerField()
-    slug = models.SlugField(unique=True)
-
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:billingpackage", args=[self.pk])
-
-    def __str__(self):
-        return "{0}".format(self.name)
-
-
-
-class Account(ChangeLoggedModel):
-    primary_applicant = models.ForeignKey(Customer, on_delete=models.PROTECT)
-
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:account", args=[self.pk])
-
-    def __str__(self):
-        return "{0}".format(self.primary_applicant.name())
 
 class Equipment(ChangeLoggedModel):
     serial = models.CharField(max_length=255)
@@ -95,33 +21,6 @@ class Equipment(ChangeLoggedModel):
 
 class CustomerPremiseEquipment(Equipment):
     ip_address = IPAddressField()
-
-class AntennaProfile(Equipment):
-    azimuth = models.IntegerField()
-    beamwidth = models.IntegerField()
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return "Profile: {0}".format(self.name)
-
-class RadioAccessPoint(Equipment):
-    ANTENNA_FREQUENCY_CHOICES = (
-        ("900mhz", "900"),
-        ("2.4ghz", "2.4"),
-        ("3.5ghz", "3.5"),
-        ("5ghz", "5"),
-    )
-
-    frequency = models.CharField(max_length=30, choices=ANTENNA_FREQUENCY_CHOICES)
-    name = models.CharField(max_length=30)
-    antenna = models.ForeignKey(AntennaProfile, on_delete=models.PROTECT)
-    ip_address = IPAddressField(blank=True, null=True, default="")
-
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:radioaccesspoint", args=[self.pk])
-
-    def __str__(self):
-        return "{0}".format(self.name)
 
 
 """Service model"""
@@ -147,8 +46,6 @@ class Service(ChangeLoggedModel):
     def __str__(self):
         return "{0} - {1} - {2}".format(self.account.primary_applicant.name(), self.billing_package.name, self.address)
 
-class WirelessService(Service):
-    sector = models.ForeignKey(RadioAccessPoint, on_delete=models.PROTECT)
 
 class FiberService(Service):
     interface = models.ForeignKey(Interface, on_delete=models.PROTECT)
@@ -216,19 +113,45 @@ class Ticket(ChangeLoggedModel):
     objects = InheritanceManager()
 
 
-class WirelessTicket(Ticket):
-    WIRELESS_TICKET_CONCLUSION_CHOICES = (
-        ("PASS", "PASS"),
-        ("FAIL", "FAIL"),
-        ("SPECIAL", "SPECIAL - SEE NOTES (PASS)"),
-        ("SPECIAL", "SPECIAL - SEE NOTES (FAIL)")
-    )
-    rssi = models.IntegerField(null=True)
-    local_noise_floor = models.IntegerField(null=True)
-    survey_height = models.IntegerField(null=True)
-    conclusion = models.CharField(choices=WIRELESS_TICKET_CONCLUSION_CHOICES,max_length=255,null=True)
-    cpe = models.ForeignKey(Device, on_delete=models.PROTECT, null=True)
+
+class Attachment(ChangeLoggedModel):
+    image = models.ImageField(upload_to='netbox_netisp/attachments/')
+    account = models.ForeignKey(Account, on_delete=models.PROTECT, null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT, null=True, blank=True)
+    service = models.ForeignKey(Service, on_delete=models.PROTECT, null=True, blank=True)
 
     def get_absolute_url(self):
-        return reverse("plugins:netbox_netisp:wirelessticket", args=[self.pk])
+        return reverse("plugins:netbox_netisp:attachment", args=[self.pk])
 
+class ISPActiveDevice(ChangeLoggedModel):
+    name = models.CharField(max_length=255)
+    comments = models.TextField(null=True, blank=True)
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
+    device_type = models.ForeignKey(DeviceType, on_delete=models.PROTECT)
+    site = models.ForeignKey(Site, on_delete=models.PROTECT)
+    ip_address = IPAddressField(blank=True, null=True, default="")
+    uuid = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, null=True, blank=True)
+
+class OLT(ISPActiveDevice):
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:olt", args=[self.pk])
+    pass
+
+class GPONSplitter(ChangeLoggedModel):
+    name = models.CharField(max_length=255)
+    uplink_type = models.CharField(max_length=255)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    uplink_port = GenericForeignKey('content_type', 'object_id')
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:olt", args=[self.pk])
+
+    def __str__(self):
+        return self.name
+class ONT(ISPActiveDevice):
+    uplink = models.ForeignKey(GPONSplitter, on_delete=models.PROTECT)
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_netisp:olt", args=[self.pk])
