@@ -31,7 +31,7 @@ urlpatterns = [
     path("accounts/<int:pk>/edit/", AccountEditView.as_view(), name="account_edit"),
     path("accounts/<int:pk>/", AccountView.as_view(), name="account"),
     path("accounts/<int:pk>/<int:service_id>", AccountView.as_view(), name="account_selected"),
-    path("accounts/<int:pk>/<str:action>", AccountView.as_view(), name="account_update"),
+    path("accounts/<int:service_id>/<str:action>", AccountView.as_view(), name="account_update"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
 
     path("equipment/", EquipmentListView.as_view(), name="equipment_list"),

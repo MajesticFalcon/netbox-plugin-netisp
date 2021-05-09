@@ -7,24 +7,17 @@
             <td><label class="label label-primary">{{ selected_service.type }}</label></td>
         </tr>
         <tr>
-            <td>Type</td>
-            <td>{{ selected_service.status }}</td>
-        </tr>
-        <tr>
-            <td>Customer Premise Equipment</td>
-            <td>{{ selected_service.cpe.manufacturer }} {{ selected_service.cpe.device_type }} <br>
+            <td>CPE</td>
+            <td> < CPE PLACEHOLDER > <br>
                 <a href="https://{{ selected_service.cpe.ip_address|plugin_remove_cidr }}">{{ selected_service.cpe.ip_address|plugin_remove_cidr }}</a>
             </td>
         </tr>
-        {% if selected_service.sector %}
         <tr>
             <td>Uplink Sector</td>
-            <td><a href="{% url 'plugins:netbox_netisp:radioaccesspoint' pk=selected_service.sector.pk %} ">{{ selected_service.sector.name }}</a> <br>
-                {{ selected_service.sector.manufacturer }} {{selected_service.sector.device_type }} <br>
-                <a href="https://{{ selected_service.sector.ip_address|plugin_remove_cidr }}">{{ selected_service.sector.ip_address|plugin_remove_cidr }}</a>
+            <td>
+                < SECTOR PLACEHOLDER >
             </td>
         </tr>
-        {% endif %}
 
     </table>
 </div>

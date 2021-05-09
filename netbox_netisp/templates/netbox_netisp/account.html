@@ -35,27 +35,6 @@
                 </tr>
             </table>
         </div>
-        {% if selected_service is not None %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong>Service Billing Detail</strong>
-                </div>
-                <table class="table table-hover panel-body attr-table table-condensed">
-                    <tr>
-                        <td>Billing completed</td>
-                        <td><label class="label label-success">{{ selected_service.billing.billing_updated }}</label></td>
-                    </tr>
-                    <tr>
-                        <td>Billing start date</td>
-                        <td>{{ selected_service.billing.billing_start_date }}</td>
-                    </tr>
-                    <tr>
-                        <td>Billing comments</td>
-                        <td>{{ selected_service.billing.comments }}</td>
-                    </tr>
-                </table>
-            </div>
-        {% endif %}
     </div>
     <div class="col-md-5">
         <div class="panel panel-default">
@@ -88,8 +67,18 @@
                     <tr>
                         <th>Actions</th>
                         <td><a class="btn btn-primary" href="{% url 'plugins:netbox_netisp:ticket_add' service_id=selected_service.pk ticket_type='repair' %}">Repair</a></td>
-                        <td><a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='place_hold' %}" class="btn btn-warning">Put on Hold</a></td>
-                        <td><a href="{% url 'plugins:netbox_netisp:account_update' pk=object.pk action='disconnect' %}" class="btn btn-danger">Disconnect</a></td>
+                        <td>
+                            {% if selected_service.status == 'On Hold' %}
+                                <a href="{% url 'plugins:netbox_netisp:account_update' service_id=selected_service.pk action='remove_hold' %}" class="btn btn-warning">
+                                    Remove Hold
+                                </a>
+                            {% else %}
+                                <a href="{% url 'plugins:netbox_netisp:account_update' service_id=selected_service.pk action='place_hold' %}" class="btn btn-warning">
+                                    Put on Hold
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td><a href="{% url 'plugins:netbox_netisp:account_update' service_id=object.pk action='disconnect' %}" class="btn btn-danger">Disconnect</a></td>
 
                     </tr>
                 </table>

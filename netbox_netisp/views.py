@@ -132,6 +132,19 @@ class AccountView(ObjectView):
         """generate_template_name(self, 'wireless_service_detail') => netbox_netisp/account/wireless_service_detail.html"""
         self.selected_service_template = "{0}/{1}.html".format(self.template_plugin_prefix, detail_name)
 
+
+    def action_parser(self, selected_service, action):
+        if action == 'place_hold':
+            service = Service.objects.get(pk=selected_service)
+            service.status = 'On Hold'
+            service.save()
+            return redirect(service.account)
+        elif action == 'remove_hold':
+            service = Service.objects.get(pk=selected_service)
+            service.status = 'Active'
+            service.save()
+            return redirect(service.account)
+
     def pick_selected_service_table(self, selected_service_pk, status='Incomplete'):
 
         selected_service = None
@@ -159,10 +172,16 @@ class AccountView(ObjectView):
         #    and provide the correct service detail db to the template.
         #
         selected_service_pk = kwargs.pop('service_id', None)
+        action = kwargs.pop('action', None)
+
+        if action:
+            self.action_parser(selected_service_pk, action)
 
         current_account = get_object_or_404(self.queryset, **kwargs)
         services = current_account.service_set.all()
         ticket_table = None
+
+
 
         if selected_service_pk:
             self.pick_selected_service_table(selected_service_pk)
