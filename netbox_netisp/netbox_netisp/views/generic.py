@@ -323,7 +323,7 @@ class HomeView(View):
             "cpe_count": len(cpes),
             "customer_count": len(customers),
             "wirelessticket_confirmation_count": len(wirelessticket_confirmations),
-            "wirelessticket_count": len(wirelesstickets)
+            "wirelessticket_count": len(wirelesstickets),
             "olt_count": len(olts),
             "splitter_count": len(splitters),
             "ont_count": len(onts),

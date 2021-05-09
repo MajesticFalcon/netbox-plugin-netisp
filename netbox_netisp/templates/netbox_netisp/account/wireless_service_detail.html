@@ -7,12 +7,8 @@
             <td><label class="label label-primary">{{ selected_service.type }}</label></td>
         </tr>
         <tr>
-            <td>Type</td>
-            <td>{{ selected_service.status }}</td>
-        </tr>
-        <tr>
-            <td>Customer Premise Equipment</td>
-            <td>{{ selected_service.cpe.manufacturer }} {{ selected_service.cpe.device_type }} <br>
+            <td>CPE</td>
+            <td>{{ selected_service.cpe }} {{ selected_service.cpe.device_type }} <br>
                 <a href="https://{{ selected_service.cpe.ip_address|plugin_remove_cidr }}">{{ selected_service.cpe.ip_address|plugin_remove_cidr }}</a>
             </td>
         </tr>
